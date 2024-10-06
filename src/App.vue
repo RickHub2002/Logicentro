@@ -5,7 +5,7 @@ import NovoRegistro from '@/components/Novo-registro.vue';
 import Confrontos from '@/components/Confrontos.vue';
 import SemConfrontos from '@/components/Sem-Confrontos.vue';
 import Historico from '@/components/Historico.vue';
-import Teste from '@/components/Teste.vue';
+import Cadastro from '@/components/Cadastro.vue';
 </script>
 
 <template>
@@ -14,6 +14,7 @@ import Teste from '@/components/Teste.vue';
 <!-- <NovoRegistro /> -->
 <!-- <Confrontos /> -->
 <!-- <SemConfrontos /> -->
-<Historico />
+<!-- <Historico /> -->
+<Cadastro />
 
 </template> 

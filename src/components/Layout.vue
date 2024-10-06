@@ -29,7 +29,7 @@ export default {
   display: flex
 
   #main-content
-    height: 100%
+    height: 100vh
     flex: 1
 
     background-color: $azul3
