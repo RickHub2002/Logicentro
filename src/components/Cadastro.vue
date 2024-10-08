@@ -8,6 +8,7 @@
       <option value="veiculo">Cadastro de Veículo</option>
       <option value="motorista">Cadastro de Motorista</option>
       <option value="empresa">Cadastro de Empresa</option>
+      <option value="usuario">Cadastro de Usuário</option>
     </select>
     <!--selecao-->
 
@@ -38,6 +39,14 @@
         <input type="text" id="cnpj" v-model="dadosCadastro.cnpj" placeholder="Digite o CNPJ" />
       </div>
 
+      <div class="input-group" v-if="tipoSelecionado === 'usuario'">
+        <label for="nomeUsuario">Nome do usuário:</label>
+        <input type="text" id="nomeUsuario" v-model="dadosCadastro.nomeUsuario" placeholder="Digite o nome do usuário" />
+
+        <label for="senhaUsuario">Senha do usuário</label>
+        <input type="text" id="senhaUsuario" v-model="dadosCadastro.senhaUsuario" placeholder="Digite a senha do usuário" />
+      </div>
+
       <button id="cadastrar" type="submit">Cadastrar</button>
     </div>
   </Card>
@@ -63,6 +72,8 @@ export default {
         cnh: '',
         nomeEmpresa: '',
         cnpj: '',
+        nomeUsuario: '',
+        senhaUsuario: '',
       },
       tituloCard: '', // Para armazenar o título do card
     };

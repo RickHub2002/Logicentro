@@ -71,7 +71,7 @@
             <form id="form-container">
                 <div class="input-group">
                     <label for="peso">Peso da carga (kg):</label>
-                    <input type="number" id="peso" placeholder="Ex: 600.." />
+                    <input type="number" id="peso" placeholder="Ex: 600..." />
                 </div>
                 <div class="input-group">
                     <label for="carga">Tipo de carga:</label>

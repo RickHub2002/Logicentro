@@ -6,6 +6,7 @@ import Confrontos from '@/components/Confrontos.vue';
 import SemConfrontos from '@/components/Sem-Confrontos.vue';
 import Historico from '@/components/Historico.vue';
 import Cadastro from '@/components/Cadastro.vue';
+import Perfil from '@/components/Perfil.vue';
 </script>
 
 <template>
@@ -15,6 +16,6 @@ import Cadastro from '@/components/Cadastro.vue';
 <!-- <Confrontos /> -->
 <!-- <SemConfrontos /> -->
 <!-- <Historico /> -->
-<Cadastro />
-
+<!-- <Cadastro /> -->
+<Perfil />
 </template> 
