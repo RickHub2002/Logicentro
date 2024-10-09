@@ -1,17 +1,17 @@
 <template>
-  <aside id="sidebar-container">
+  <aside :class="{ 'sidebar-closed': !isOpen}" id="sidebar-container" >
     <header id="header-container">
-      <svg id="burger" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg @click="toggleSidebar" id="burger" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M32.5217 15.5227H1.47824C0.661822 15.5227 0 16.1845 0 17.0009C0 17.8174 0.661822 18.4792 1.47824 18.4792H32.5217C33.3381 18.4792 33.9999 17.8174 33.9999 17.0009C34 16.1845 33.3381 15.5227 32.5217 15.5227Z" fill="#F4F4F9"/>
 <path d="M1.47824 8.13079H32.5217C33.3381 8.13079 33.9999 7.46897 33.9999 6.65255C33.9999 5.83614 33.3381 5.17432 32.5217 5.17432H1.47824C0.661822 5.17432 0 5.83614 0 6.65255C0 7.46897 0.661822 8.13079 1.47824 8.13079Z" fill="#F4F4F9"/>
 <path d="M32.5217 25.8698H1.47824C0.661822 25.8698 0 26.5316 0 27.3481C0 28.1645 0.661822 28.8263 1.47824 28.8263H32.5217C33.3381 28.8263 33.9999 28.1645 33.9999 27.3481C34 26.5316 33.3381 25.8698 32.5217 25.8698Z" fill="#F4F4F9"/>
       </svg>
-      <img id="logo" src="@/assets/imagens/Logo.svg" />
+      <img v-if="isOpen" id="logo" src="@/assets/imagens/Logo.svg" />
     </header>
 
     <nav id="navigation-container">
       <ul class="list-container">
-        <h2>REGISTROS</h2>
+        <h2 v-if="isOpen">REGISTROS</h2>
         <li class="list-item">
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
           <g clip-path="url(#clip0_124_98)">
@@ -26,7 +26,7 @@
           </clipPath>
           </defs>
           </svg>
-          <p>Registros Pendentes</p>
+          <p v-if="isOpen">Registros Pendentes</p>
         </li>
         <!--list-item-->
         <li class="list-item">
@@ -41,13 +41,13 @@
 </clipPath>
 </defs>
           </svg>
-          <p>Novo Registro</p>
+          <p v-if="isOpen">Novo Registro</p>
         </li>
         <!--list-item-->
       </ul>
 
       <ul class="list-container">
-        <h2>MENU DE CONTROLE</h2>
+        <h2 v-if="isOpen">MENU DE CONTROLE</h2>
         <li class="list-item">
           <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_124_147)">
@@ -59,7 +59,7 @@
 </clipPath>
 </defs>
           </svg>
-          <p>Confrontos</p>
+          <p v-if="isOpen">Confrontos</p>
         </li>
         <!--list-item-->
         <li class="list-item">
@@ -74,7 +74,7 @@
 </clipPath>
 </defs>
           </svg>
-          <p>Histórico</p>
+          <p v-if="isOpen">Histórico</p>
         </li>
         <!--list-item-->
         <li class="list-item">
@@ -88,14 +88,14 @@
 </clipPath>
 </defs>
           </svg>
-          <p>Cadastro</p>
+          <p v-if="isOpen">Cadastro</p>
         </li>
         <!--list-item-->
         <li class="list-item">
           <svg width="34" height="38" viewBox="0 0 34 38" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0.636382 28.5C1.93873 30.773 4.8269 31.554 7.08723 30.2443C7.08878 30.2434 7.09025 30.2425 7.0918 30.2416L7.79242 29.8347C9.11499 30.9726 10.6352 31.8551 12.2765 32.4377V33.25C12.2765 35.8733 14.3913 38 17 38C19.6087 38 21.7235 35.8733 21.7235 33.25V32.4378C23.365 31.8542 24.8853 30.9707 26.2076 29.8316L26.9114 30.2401C29.1722 31.5517 32.0625 30.772 33.3668 28.4984C34.6711 26.2248 33.8957 23.3183 31.6348 22.0067L30.9358 21.6014C31.2505 19.8794 31.2505 18.1142 30.9358 16.3922L31.6348 15.9869C33.8957 14.6752 34.6711 11.7688 33.3668 9.49518C32.0625 7.22163 29.1723 6.44182 26.9114 7.75348L26.2107 8.16043C24.8869 7.02391 23.3656 6.14309 21.7235 5.56225V4.75C21.7235 2.12666 19.6087 0 17 0C14.3913 0 12.2765 2.12666 12.2765 4.75V5.56225C10.635 6.14583 9.1147 7.02933 7.79242 8.16844L7.08863 7.75838C4.82771 6.44664 1.93755 7.22646 0.633209 9.5C-0.671131 11.7735 0.104255 14.68 2.36517 15.9917L3.06424 16.397C2.74954 18.1189 2.74954 19.8842 3.06424 21.6062L2.36517 22.0115C0.110528 23.3267 -0.662348 26.2274 0.636382 28.5ZM17 12.6667C20.4782 12.6667 23.2979 15.5022 23.2979 19C23.2979 22.4978 20.4782 25.3333 17 25.3333C13.5218 25.3333 10.7021 22.4978 10.7021 19C10.7021 15.5022 13.5218 12.6667 17 12.6667Z" fill="#F4F4F9"/>
           </svg>
-          <p>Configurações</p>
+          <p v-if="isOpen">Configurações</p>
         </li>
         <!--list-item-->
       </ul>
@@ -122,90 +122,103 @@ export default {
   name: 'Sidebar',
   data() {
     return {
-      mensagem: 'Ola'
+      isOpen: true,
     };
+  },
+  methods: {
+    toggleSidebar() {
+      this.isOpen = !this.isOpen;
+    }
   }
 };
 </script>
 
 <style lang="sass" scoped>
-  @import '@/assets/sass/main.sass' // Usando o alias definido
+@import '@/assets/sass/main.sass' // Usando o alias definido
 
-  #sidebar-container
-    display: flex
-    flex-direction: column
-    justify-content: space-between
+#sidebar-container
+  display: flex
+  flex-direction: column
+  justify-content: space-between
 
-    position: fixed
+  position: fixed
     
-    height: 100%
-    max-height: 100vh
-    width: 400px
+  height: 100vh
 
-    padding: 1.375rem 0 0 1.375rem
+  overflow-y: auto
 
-    background-color: $azul2  
+  width: 400px
 
-    #header-container
-      display: flex
-      gap: 2.625rem
+  padding: 1.375rem 0 0 1.375rem
 
-      #burger
-        cursor: pointer
+  background-color: $azul2  
 
-        transition: 0.2s ease-in-out
+  &.sidebar-closed
+    background: green
+    width: auto
 
-        &:hover
-          filter: brightness(80%)
+  #header-container
+    display: flex
+    gap: 2.625rem
 
-    #navigation-container
-      margin-top: 3.75rem
+    #burger
+      cursor: pointer
 
-    .list-container
-      list-style-type: none
+      transition: 0.2s ease-in-out
 
-      h2
-        @include sidebar-titulo-styles 
+      &:hover
+        filter: brightness(80%)
 
-        color: $branco
+  #navigation-container
+    margin-top: 3.75rem
 
-        margin-bottom: 12px
+  .list-container
+    list-style-type: none
 
-      .list-item
-        @include centralizar()
-        justify-content: flex-start
+    h2
+      @include sidebar-titulo-styles 
 
-        gap: 0.75rem
+      color: $branco
 
-        height: 40px
+      margin-bottom: 12px
 
-        margin-bottom: 1.375rem
+    .list-item
+      @include centralizar()
+      justify-content: flex-start
 
-        cursor: pointer
+      gap: 0.75rem
 
-        transition: 0.1s ease-in-out
+      height: 40px
 
-        &:hover
-          background-color: $azul1
-          box-shadow: 0px 0px 0px 4px $azul1
-          margin-left: -1.375rem
-          width: calc(100% + 1.10rem)
+      margin-bottom: 1.375rem
 
-          svg
-            margin-left: 1.375rem
+      cursor: pointer
 
-        p 
-          @include sidebar-opcoes-styles
+      transition: 0.1s ease-in-out
 
-      color: $branco2
+      &:hover
+        background-color: $azul1
+        box-shadow: 0px 0px 0px 4px $azul1
+
+        transform: translateX(-1.65rem)
+
+        width: calc(100% + 1.375rem)
+
+        svg
+          margin-left: 1.375rem
+
+      p 
+        @include sidebar-opcoes-styles
+        color: $branco2
 
   #line
     height: 1px
     width: calc(100% + 1.375rem)
     max-width: 400px
 
-    margin: 6.25rem 0 0.313rem -1.375rem
-    background: $preto
+    margin: 6.25rem 0 2.313rem -1.375rem
+    background: purple
+    height: 40px
 
   #footer-container
     display: flex
@@ -223,7 +236,6 @@ export default {
       @include centralizar
       flex-direction: column
       align-items: flex-start
-
       margin-left: 0.75rem
 
       p
@@ -249,29 +261,9 @@ export default {
         cursor: pointer
 
 @media screen and (max-width: 768px)
-  #sidebar-container
-    width: 80px
-
-    .list-item > p, h2
-      display: none
-
-    #header-container
-      flex-direction: column
-
-    #logo
-      display: none
-      order: 1  
-      width: 7rem
-      height: 7rem
-
-      margin: 0 auto
-
-    #burger
-      order: 2
-
-    #footer-container
-      flex-direction: column
-
-      #logout
-        margin: 0 auto
+#sidebar-container
+  #footer-container
+    #login-avatar
+      height: 34px
+      width: 34px
 </style>

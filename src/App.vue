@@ -10,12 +10,12 @@ import Perfil from '@/components/Perfil.vue';
 </script>
 
 <template>
-<!--   <Login /> -->
-<!-- <RegistrosPendentes /> -->
+<!-- <Login />  -->
+<RegistrosPendentes />
 <!-- <NovoRegistro /> -->
 <!-- <Confrontos /> -->
 <!-- <SemConfrontos /> -->
 <!-- <Historico /> -->
 <!-- <Cadastro /> -->
-<Perfil />
+<!-- <Perfil /> -->
 </template> 

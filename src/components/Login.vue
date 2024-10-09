@@ -100,9 +100,12 @@ export default {
         width: calc(140px + 10px)
 
       svg
-        color: $branco
+        color: $preto
 
 @media screen and (max-width: 768px)
+
+#login-container
+
   #login-avatar
     width: 10rem
     height: 10rem

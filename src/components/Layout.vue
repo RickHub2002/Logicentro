@@ -27,15 +27,16 @@ export default {
 
 #layout-container
   display: flex
+  background: pink
+
 
   #main-content
-    height: 100vh
+    height: 100%
     flex: 1
 
     background-color: $azul3
 
     padding: 6.875rem 8rem 0 3.75rem
-    margin-left: 400px
 
     #breadcrumb
       @include trilha-styles
@@ -47,11 +48,4 @@ export default {
       color: $branco
 
       margin-bottom: 1rem
-
-@media screen and (max-width: 768px)
-  #layout-container
-    display: flex
-
-    #main-content
-      margin-left: 80px
 </style>
