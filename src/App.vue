@@ -10,7 +10,7 @@ import Perfil from '@/components/Perfil.vue';
 </script>
 
 <template>
-<!-- <Login />  -->
+<!-- <Login /> -->
 <RegistrosPendentes />
 <!-- <NovoRegistro /> -->
 <!-- <Confrontos /> -->

@@ -146,6 +146,7 @@ export default {
   height: 100vh
 
   overflow-y: auto
+  overflow-x: hidden
 
   width: 400px
 
@@ -153,9 +154,32 @@ export default {
 
   background-color: $azul2  
 
+  transition: 0.2s ease-in-out
+
   &.sidebar-closed
-    background: green
-    width: auto
+    width: 88px
+    padding: 1.375rem 0 0 1.375rem
+ 
+    #footer-container
+      flex-direction: column
+      justify-content: center
+      gap: 0.75rem
+
+      height: 140px
+
+      #line
+        margin-bottom: 500px
+
+      #usuario
+        align-items: center
+
+        margin-left: 0
+
+        p
+          font-size: 12px
+      
+      #logout
+        margin-left: 0
 
   #header-container
     display: flex
@@ -200,9 +224,7 @@ export default {
         background-color: $azul1
         box-shadow: 0px 0px 0px 4px $azul1
 
-        transform: translateX(-1.65rem)
-
-        width: calc(100% + 1.375rem)
+        margin-left: -1.375rem
 
         svg
           margin-left: 1.375rem
@@ -217,8 +239,8 @@ export default {
     max-width: 400px
 
     margin: 6.25rem 0 2.313rem -1.375rem
-    background: purple
-    height: 40px
+    background: $preto
+    height: 1px
 
   #footer-container
     display: flex

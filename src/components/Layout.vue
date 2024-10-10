@@ -13,11 +13,13 @@
 
 <script>
 import Sidebar from '@/components/Sidebar.vue';
+import Breadcrumb from '@/components/Breadcrumb.vue';
 
 export default {
   name: 'Layout',
   components: {
     Sidebar,
+    Breadcrumb,
   }
 };
 </script>
@@ -27,12 +29,12 @@ export default {
 
 #layout-container
   display: flex
-  background: pink
-
 
   #main-content
     height: 100%
     flex: 1
+
+    margin-left: 400px
 
     background-color: $azul3
 
