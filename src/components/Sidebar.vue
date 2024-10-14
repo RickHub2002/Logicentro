@@ -157,13 +157,13 @@ export default {
   transition: 0.2s ease-in-out
 
   &.sidebar-closed
-    width: 88px
+    width: 84px
     padding: 1.375rem 0 0 1.375rem
  
     #footer-container
       flex-direction: column
       justify-content: center
-      gap: 0.75rem
+      gap: 0.5rem
 
       height: 140px
 
@@ -246,11 +246,10 @@ export default {
     display: flex
     align-items: center
 
-    height: 70px
+    height: 80px
 
     margin-left: -1.375rem
-    padding-left: 1.375rem
-    padding-right: 1.375rem
+    padding: .5rem 1.375rem .5rem 1.375rem
 
     background: $preto
 
@@ -281,6 +280,9 @@ export default {
 
       &:hover
         cursor: pointer
+
+@media screen and (max-width: 1000px)
+  
 
 @media screen and (max-width: 768px)
 #sidebar-container

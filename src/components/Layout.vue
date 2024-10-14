@@ -34,7 +34,7 @@ export default {
     height: 100%
     flex: 1
 
-    margin-left: 400px
+    margin-left: 84px
 
     background-color: $azul3
 
