@@ -282,7 +282,6 @@ export default {
         cursor: pointer
 
 @media screen and (max-width: 1000px)
-  
 
 @media screen and (max-width: 768px)
 #sidebar-container
