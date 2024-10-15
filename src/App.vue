@@ -11,9 +11,10 @@ import Perfil from '@/components/Perfil.vue';
 
 <template>
 <!-- <Login /> -->
-<RegistrosPendentes />
+<router-view />
+<!-- <RegistrosPendentes /> -->
 <!-- <NovoRegistro /> -->
-<!-- <Confrontos /> -->
+<Confrontos />
 <!-- <SemConfrontos /> -->
 <!-- <Historico /> -->
 <!-- <Cadastro /> -->

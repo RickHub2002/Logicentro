@@ -25,7 +25,9 @@
           </li>
           <li class="card-info-item">
             <span>Data</span>
-            <span>{{ registro.data }}</span>
+            <span>
+              {{ registro.data.split(' ')[0] }}<br>{{ registro.data.split(' ')[1] }}
+            </span>
           </li>
           <li class="card-info-item">
             <span>Ações</span>
@@ -58,7 +60,7 @@ export default {
           origem: 'MATRIZ',
           destino: 'CD',
           motorista: 'ARMANDO',
-          data: '12/09/2024 20:50:10',
+          data: '12/09/2024 20:50:15',
         },
         {
           id: 2,
@@ -67,7 +69,7 @@ export default {
           origem: 'MATRIZ',
           destino: 'CD',
           motorista: 'ARMANDO',
-          data: '12/09/2024 20:50:10',
+          data: '12/09/2024 20:50:12',
         },
         {
           id: 3,
@@ -89,13 +91,15 @@ export default {
 @import '@/assets/sass/main.sass' // Usando o alias definido
 
 #main-content
+  #card
+    margin-bottom: 5px
+
   #card-info
     display: grid
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) // Faz o grid ser responsivo
     gap: 1rem
     padding: 1rem
-    border-bottom: 1px solid #000000
-    margin-bottom: 1.5rem
+    margin-bottom: 2.5rem
 
   .card-info-item
     display: flex
