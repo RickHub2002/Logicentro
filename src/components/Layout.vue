@@ -2,7 +2,7 @@
   <div id="layout-container">
     <Sidebar />
     <div id="main-content">
-      <p id="breadcrumb">Breadcrumbs/registros-pendentes</p>
+      <Breadcrumb />
       <h1 id="titulo">Registros Pendentes (Aguardando recebimento)</h1>
       <slot></slot>
     </div>

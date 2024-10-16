@@ -2,8 +2,13 @@
 <template>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li v-for="(route, index) in breadcrumbRoutes" :key="index" class="breadcrumb-item">
-        <router-link v-if="index !== breadcrumbRoutes.length - 1" :to="route.path">{{ route.meta.breadcrumb }}</router-link>
+      <li v-if="category" class="breadcrumb-item">
+        {{ category }} <!-- Exibe a categoria -->
+      </li>
+      <li v-for="(route, index) in routes" :key="index" class="breadcrumb-item">
+        <router-link v-if="index < routes.length - 1" :to="route.path">
+          {{ route.meta.breadcrumb }}
+        </router-link>
         <span v-else>{{ route.meta.breadcrumb }}</span>
       </li>
     </ol>
@@ -19,21 +24,28 @@ export default {
   setup() {
     const route = useRoute();
 
-    const breadcrumbRoutes = computed(() => {
-      // Obtém todas as rotas aninhadas até a rota atual
+    const routes = computed(() => {
       const routes = [];
       let currentRoute = route;
 
+      // Obtém todas as rotas aninhadas até a rota atual
       while (currentRoute) {
         routes.unshift(currentRoute);
-        currentRoute = currentRoute.matched[0] ? currentRoute.matched[0] : null;
+        currentRoute = currentRoute.matched && currentRoute.matched.length > 0 ? currentRoute.matched[0] : null;
       }
 
-      return routes.filter(route => route.meta.breadcrumb); // Filtra apenas as rotas com breadcrumb
+      // Filtra apenas as rotas com breadcrumb
+      return routes.filter(route => route.meta.breadcrumb);
+    });
+
+    const category = computed(() => {
+      // Retorna a categoria, que é a penúltima rota na lista, se existir
+      return routes.value.length > 1 ? routes.value[routes.value.length - 2].meta.breadcrumb : '';
     });
 
     return {
-      breadcrumbRoutes,
+      category,
+      routes,
     };
   },
 };

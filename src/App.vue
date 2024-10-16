@@ -14,7 +14,7 @@ import Perfil from '@/components/Perfil.vue';
 <router-view />
 <!-- <RegistrosPendentes /> -->
 <!-- <NovoRegistro /> -->
-<Confrontos />
+<!-- <Confrontos /> -->
 <!-- <SemConfrontos /> -->
 <!-- <Historico /> -->
 <!-- <Cadastro /> -->
