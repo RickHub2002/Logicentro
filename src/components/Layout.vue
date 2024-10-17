@@ -33,6 +33,8 @@ export default {
         return 'Registros pendentes'
       } else if(this.$route.name==='Confrontos' || this.$route.name==='SemConfrontos'){
         return 'Confrontos'
+      } else if (this.$route.name==='Historico'){
+        return 'Histórico'
       } else if(this.$route.name==='Cadastro'){
         return 'Cadastro'
       } else {
