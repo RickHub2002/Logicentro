@@ -19,8 +19,25 @@
         <label for="placa">Placa do Veículo:</label>
         <input type="text" id="placa" v-model="dadosCadastro.placa" placeholder="Digite a placa do veículo" />
         
+        <label for="marca">Marca do Veículo:</label>
+        <input type="text" id="marca" v-model="dadosCadastro.marca" placeholder="Digite a marca do veículo" />
+
         <label for="modelo">Modelo do Veículo:</label>
         <input type="text" id="modelo" v-model="dadosCadastro.modelo" placeholder="Digite o modelo do veículo" />
+
+        <label for="ano">Ano do Veículo:</label>
+        <input type="number" @input="validarAno" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
+        
+        <label for="tipo">Tipo do veículo:</label>
+        <input type="text" id="tipo" v-model="dadosCadastro.tipo" placeholder="Digite o tipo do véiculo" />
+        
+        <label for="situacao">Situação do véiculo (A/I):</label>
+        <select id="situacao">
+          <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
+          <option value="Ativo">Ativo</option>
+          <option value="Inativo">Inativo</option>
+        </select>
+        <p v-if="erroAno" style="color: red;">{{ erroAno }}</p>
       </div>
 
       <div class="input-group" v-if="tipoSelecionado === 'motorista'">
@@ -67,7 +84,12 @@ export default {
       tipoSelecionado: '', // Para armazenar o tipo de cadastro selecionado
       dadosCadastro: {
         placa: '',
+        marca: '',
         modelo: '',
+        ano: '',
+        tipo: '',
+        situacao: '',
+
         nomeMotorista: '',
         cnh: '',
         nomeEmpresa: '',
@@ -75,6 +97,7 @@ export default {
         nomeUsuario: '',
         senhaUsuario: '',
       },
+      erroAno: '',
       tituloCard: '', // Para armazenar o título do card
     };
   },
@@ -88,6 +111,18 @@ export default {
         this.tituloCard = 'Cadastro de Empresa';
       }
     },
+    validarAno() {
+      // Garantir que apenas números sejam inseridos e limitar a 4 dígitos
+      this.dadosCadastro.ano = this.dadosCadastro.ano.toString().slice(0, 4);
+      
+      // Validar se o ano está dentro do intervalo permitido (1900-2024)
+      if (this.dadosCadastro.ano >= 1970 && this.dadosCadastro.ano <= 2024) {
+        print("Brabo")
+      }
+      else {
+        this.dadosCadastro.ano = 's'
+      }
+    }
   },
 };
 </script>
