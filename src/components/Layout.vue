@@ -23,7 +23,9 @@ export default {
   },
   computed: {
     titulo(){
-      if (this.$route.name==='NovoRegistro'){
+      if (this.$route.name==='PaginaInicial'){
+        return 'Página Inicial'
+      } else if (this.$route.name==='NovoRegistro'){
         return 'Criar novo registro'
       } else if (this.$route.name==='Perfil'){
         return 'Perfil'
@@ -48,14 +50,14 @@ export default {
   display: flex
 
   #main-content
-    height: 100%
+    min-height: 100vh
     flex: 1
 
     margin-left: 84px
 
     background-color: $azul3
 
-    padding: 6.875rem 8rem 0 3.75rem
+    padding: 5rem 7rem 5rem 4rem
 
     #breadcrumb
       @include trilha-styles

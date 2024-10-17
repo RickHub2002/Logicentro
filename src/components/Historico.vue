@@ -64,7 +64,6 @@ export default {
 <style lang="sass" scoped>
 @import '@/assets/sass/main.sass' // Usando o alias definido
 #main-content
-  height: 100vh
   ul
     list-style-type: none
 

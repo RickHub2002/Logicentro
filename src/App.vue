@@ -1,5 +1,6 @@
 <script setup>
 import Login from '@/components/Login.vue';
+import PaginaInicial from '@/components/Pagina-inicial.vue';
 import RegistrosPendentes from '@/components/Registros-pendentes.vue';
 import NovoRegistro from '@/components/Novo-registro.vue';
 import Confrontos from '@/components/Confrontos.vue';
