@@ -1,4 +1,3 @@
-<!-- src/components/Breadcrumb.vue -->
 <template>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -25,21 +24,14 @@ export default {
     const route = useRoute();
 
     const routes = computed(() => {
-      const routes = [];
-      let currentRoute = route;
+      const matchedRoutes = route.matched;
 
-      // Obtém todas as rotas aninhadas até a rota atual
-      while (currentRoute) {
-        routes.unshift(currentRoute);
-        currentRoute = currentRoute.matched && currentRoute.matched.length > 0 ? currentRoute.matched[0] : null;
-      }
-
-      // Filtra apenas as rotas com breadcrumb
-      return routes.filter(route => route.meta.breadcrumb);
+      // Retorna apenas as rotas que têm o meta.breadcrumb definido
+      return matchedRoutes.filter(route => route.meta && route.meta.breadcrumb);
     });
 
     const category = computed(() => {
-      // Retorna a categoria, que é a penúltima rota na lista, se existir
+      // Retorna a categoria da penúltima rota, se ela existir
       return routes.value.length > 1 ? routes.value[routes.value.length - 2].meta.breadcrumb : '';
     });
 
@@ -64,3 +56,4 @@ export default {
   margin: 0 0.5rem;
 }
 </style>
+

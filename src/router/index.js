@@ -20,7 +20,7 @@ const routes = [
     path: '/Pagina-inicial',
     name: 'PaginaInicial',
     component: PaginaInicial,
-    meta: {breadcrumb: 'Página Inicial', category: ''}
+    meta: {breadcrumb: 'Página Inicial', category: 'Menu de controle'}
   },
   {
     path: '/registros-pendentes',
