@@ -3,7 +3,7 @@
     <Sidebar />
     <div id="main-content">
       <Breadcrumb />
-      <h1 id="titulo">Registros Pendentes (Aguardando recebimento)</h1>
+      <h1 id="titulo">{{titulo}}</h1>
       <slot></slot>
     </div>
     <!--main-content-->
@@ -20,6 +20,23 @@ export default {
   components: {
     Sidebar,
     Breadcrumb,
+  },
+  computed: {
+    titulo(){
+      if (this.$route.name==='NovoRegistro'){
+        return 'Criar novo registro'
+      } else if (this.$route.name==='Perfil'){
+        return 'Perfil'
+      } else if(this.$route.name==='RegistrosPendentes'){
+        return 'Registros pendentes'
+      } else if(this.$route.name==='Confrontos' || this.$route.name==='SemConfrontos'){
+        return 'Confrontos'
+      } else if(this.$route.name==='Cadastro'){
+        return 'Cadastro'
+      } else {
+        return 'Página Desconhecida'
+      }
+    }
   }
 };
 </script>
