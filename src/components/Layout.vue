@@ -61,10 +61,6 @@ export default {
 
     padding: 5rem 7rem 5rem 4rem
 
-    #breadcrumb
-      @include trilha-styles
-      color: $branco
-
       margin-bottom: 1.25rem
     #titulo
       @include titulo-styles

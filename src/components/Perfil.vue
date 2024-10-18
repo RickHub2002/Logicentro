@@ -2,7 +2,7 @@
   <Layout>
     <section id="main-content">
       <div id="image-container">
-        <img :src="imageSrc" id="imagem" alt="Imagem de perfil" />
+        <img :src="imageSrc" id="imagem"/>
         <svg @click="uploadImage"  width="50" height="50" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g clip-path="url(#clip0_261_232)">
 <path d="M23.1708 26.117C22.5904 25.5362 21.9012 25.0755 21.1426 24.7612C20.3841 24.4468 19.571 24.285 18.7499 24.285C17.9288 24.285 17.1158 24.4468 16.3572 24.7612C15.5987 25.0755 14.9095 25.5362 14.3291 26.117L0.0791016 40.367C0.271728 42.9797 1.44349 45.4234 3.36009 47.2095C5.27668 48.9955 7.79683 49.9922 10.4166 50.0004H39.5833C41.6244 50 43.6198 49.3962 45.3187 48.265L23.1708 26.117Z" fill="black"/>

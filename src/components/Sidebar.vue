@@ -126,7 +126,7 @@
         <p>@Usuário</p>
         <p>Administrador</p>
         </div>
-      <img id="logout" src="@/assets/imagens/fi-sr-sign-out.svg" />
+      <img id="logout" @click="logout" src="@/assets/imagens/fi-sr-sign-out.svg" />
     </footer> 
     <!--footer-container-->
   </aside>
@@ -152,7 +152,11 @@ export default {
     toggleSidebar() {
       this.isOpen = !this.isOpen;
       sessionStorage.setItem('sidebarState', JSON.stringify(this.isOpen));
-    }
+    },
+    logout() {
+      this.$router.push('/login');
+      console.log('alo')
+    },
   }
 };
 </script>
