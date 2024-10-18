@@ -12,7 +12,7 @@ import Perfil from '@/components/Perfil.vue';
 
 const routes = [
   {
-    path: '/login',
+    path: '/',
     name: 'Login',
     component: Login,
   },
