@@ -14,8 +14,15 @@
 <script>
 import Sidebar from '@/components/Sidebar.vue';
 import Breadcrumb from '@/components/Breadcrumb.vue';
+import axios from 'axios';
 
 export default {
+  data() {
+    return {
+      message: '',
+      postResponse: ''
+    }
+  },
   name: 'Layout',
   components: {
     Sidebar,
@@ -41,7 +48,30 @@ export default {
         return 'Página Desconhecida'
       }
     }
-  }
+  },
+  methods: {
+    async fetchMessage() {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/my-endpoint/');
+        this.message = response.data.message;  // Data from Django API
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async sendData() {
+      try {
+        const data = { name: 'Vue.js Frontend' };
+        const response = await axios.post('http://127.0.0.1:8000/api/my-endpoint/', data);
+        this.postResponse = response.data.status;  // Response from Django
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+  mounted() {
+    this.fetchMessage(); // Fetch data when component is mounted
+    console.log("AAAAAAAAAAAOOOOOOOOH KASINAAAAAAAAAAO I'M I'M OH YEAH CAN'T GET IT OVER NOW")
+  } 
 };
 </script>
 

@@ -46,6 +46,7 @@
 
 <script>
 import Layout from '@/components/Layout.vue';
+import axios from 'axios'
 
 export default {
   name: 'Perfil',
@@ -55,7 +56,11 @@ export default {
   data() {
     return {
       imageSrc: 'default-image-url.png', // URL da imagem padrão
+      registros: []
     };
+  },
+  mounted() {
+    this.fetchRegistros();
   },
   methods: {
     uploadImage() {
@@ -72,7 +77,16 @@ export default {
         reader.readAsDataURL(file); // Lê a imagem como uma URL de dados
       }
     },
-  },
+    fetchRegistros() {
+            axios.get('http://localhost:8000/api/registros/')
+                .then(response => {
+                    this.registros = response.data;
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar registros:', error);
+                });
+    }
+  }
 };
 </script>
 

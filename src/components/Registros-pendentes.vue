@@ -44,6 +44,8 @@
 <script>
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
+import axios from 'axios';
+
 export default {
   name: 'Registros-pendentes',
   components: {
@@ -83,6 +85,20 @@ export default {
         // Adicione outros registros aqui
       ],
     };
+  },
+  mounted(){
+    this.fetchRegistros();
+  },
+  methods: {
+    fetchRegistros() {
+          axios.get('http://localhost:8000/api/registros/')
+              .then(response => {
+                this.registros = response.data;
+              })
+              .catch(error => {
+                console.error('Erro ao buscar registros:', error);
+              });
+    } 
   }
 };
 </script>

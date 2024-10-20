@@ -119,6 +119,8 @@
 <script>
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
+import axios from 'axios';
+
 export default {
   name: 'Cadastro',
   components: {
@@ -127,6 +129,7 @@ export default {
   },
   data() {
     return {
+      registros: [],
       tipoSelecionado: '', // Para armazenar o tipo de cadastro selecionado
       dadosCadastro: {
         placa: '',
@@ -160,6 +163,9 @@ export default {
       tituloCard: '', // Para armazenar o título do card
     };
   },
+  mounted(){
+    this.fetchRegistros();
+  },
   methods: {
     mostrarCadastro() {
       if (this.tipoSelecionado === 'veiculo') {
@@ -181,6 +187,15 @@ export default {
       else {
         this.dadosCadastro.ano = 's'
       }
+    },
+    fetchRegistros(){
+    axios.get('http://localhost:8000/api/registros/')
+                .then(response => {
+                  this.registros = response.data;
+                })
+                .catch(error => {
+                  console.error('Erro ao buscar registros:', error);
+                });  
     }
   },
 };

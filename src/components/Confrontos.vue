@@ -61,6 +61,8 @@
 <script>
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
+import axios from 'axios';
+
 export default {
   name: 'Confrontos',
   components: {
@@ -69,8 +71,23 @@ export default {
   },
   data() {
     return {
-      mensagem: 'Ola'
+      mensagem: 'Ola',
+      registros: []
     };
+  },
+  mounted(){
+    this.fetchRegistros();
+  },
+  methods: {
+        fetchRegistros() {
+            axios.get('http://localhost:8000/api/registros/')
+                .then(response => {
+                  this.registros = response.data;
+                })
+                .catch(error => {
+                  console.error('Erro ao buscar registros:', error);
+                });
+        }
   }
 };
 </script>
