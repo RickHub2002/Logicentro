@@ -70,12 +70,12 @@
             <h2 class="titulo">Informações da carga e observações</h2>
             <form id="form-container">
                 <div class="input-group">
-                    <label for="peso">Peso da carga (kg):</label>
-                    <input type="number" id="peso" placeholder="Ex: 600..." />
+                    <label for="mdfe">N° da mdfe:</label>
+                    <input type="number" id="mdfe" placeholder="Ex: 148503" />
                 </div>
                 <div class="input-group">
-                    <label for="carga">Tipo de carga:</label>
-                    <input type="text" id="carga" placeholder="Ex: Tomate" />
+                    <label for="notaFiscal">N° da nota fiscal:</label>
+                    <input type="text" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" />
                 </div>
                 <div class="input-group">
                     <label for="mensagem">Observações adicionais:</label>
@@ -163,4 +163,5 @@ export default {
           &:hover
             background: $azul3
             color: $branco2
+
 </style>

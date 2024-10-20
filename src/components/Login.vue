@@ -59,7 +59,7 @@ export default {
 
       // Redirecionar se os campos estiverem preenchidos corretamente
       if (isValidUser) {
-        this.$router.push('/pagina-inicial');
+        this.$router.push('/registros-pendentes');
       } else {
         // Você pode adicionar uma mensagem de erro genérica aqui, se desejar
         alert('Usuário ou senha incorretos');

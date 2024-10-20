@@ -67,4 +67,15 @@ export default {
       color: $branco
 
       margin-bottom: 1rem
+
+@media screen and (max-width: 768px)
+  #layout-container
+    background: red
+
+    #main-content
+      padding: 5rem 1rem 5rem 1rem
+
+  #titulo
+    text-align: center
+
 </style>

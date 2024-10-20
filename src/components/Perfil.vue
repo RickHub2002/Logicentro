@@ -18,10 +18,9 @@
         <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
       </div>
       <!--image-container-->
+      <p id="usuario">@Usuário</p>
       <form id="form-container">
         <div class="input-group">
-            <label for="nome-usuario">Nome:</label>
-            <input type="text" id="nome-usuario" placeholder="@Usuário" />
         </div>
         <div class="input-group">
             <label for="senha-atual">Senha atual:</label>
@@ -89,7 +88,6 @@ export default {
 
   width: 100%
   max-width: 1400px
-  height: 80%
   max-height: 804px
 
   #image-container 
@@ -116,6 +114,9 @@ export default {
 
       transform: translateX(100%) translateY(-450%)
 
+  #usuario
+    @include titulo-styles
+
 
   #form-container
     @include centralizar()
@@ -124,6 +125,7 @@ export default {
     gap: 1.25rem
 
     margin-top: 2.5rem
+    padding-bottom: 1.25rem 
 
     width: 80%
     max-width: 616px
@@ -161,4 +163,16 @@ button
 
   svg
     color: $branco2
+
+@media screen and (max-width: 768px)
+  #main-content
+    #image-container 
+
+      #imagem 
+        height: 100px
+        width: 100px
+      svg
+        width: 24px
+        height: 24px
+        transform: translateX(100%) translateY(-420%)
 </style>

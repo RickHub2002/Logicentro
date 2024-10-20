@@ -9,10 +9,6 @@
       <option value="motorista">Cadastro de Motorista</option>
       <option value="empresa">Cadastro de Empresa</option>
       <option value="usuario">Cadastro de Usuário</option>
-      <option value="veiculo">Histórico de Veículos</option>
-      <option value="motorista">Histórico de Motoristas</option>
-      <option value="empresa">Histórico de empresas</option>
-      <option value="usuario">Cadastro de usuários</option>
     </select>
     <!--selecao-->
 
@@ -158,6 +154,7 @@ export default {
       },
       erroAno: '',
       tituloCard: '', // Para armazenar o título do card
+      historicoCard: '',
     };
   },
   methods: {
@@ -168,6 +165,19 @@ export default {
         this.tituloCard = 'Cadastro de Motorista';
       } else if (this.tipoSelecionado === 'empresa') {
         this.tituloCard = 'Cadastro de Empresa';
+      } else if (this.tipoSelecionado === 'usuario') {
+        this.tituloCard = 'Cadastro de usuário';
+      }
+    },
+    mostrarHistorico() {
+      if (this.tipoSelecionado === 'veiculo') {
+        this.historicoCard = 'Histórico de Veículo';
+      } else if (this.tipoSelecionado === 'motorista') {
+        this.historicoCard = 'Histórico de Motorista';
+      } else if (this.tipoSelecionado === 'empresa') {
+        this.historicoCard = 'Histórico de Empresa';
+      } else if (this.tipoSelecionado === 'usuario') {
+        this.historicoCard = 'Histórico de usuário';
       }
     },
     validarAno() {
@@ -261,5 +271,21 @@ export default {
     background: $azul3
     color: $branco2
 
+#historico-dados, #topicos
+  list-style-type: none
+  display: flex
+  gap: 2rem
+  @include titulo-styles
 
+  #topicos
+    padding: 5px
+    background-color: $cinza1
+
+@media screen and (max-width: 520px)
+  .input-group
+    max-width: 300px
+
+@media screen and (max-width: 440px)
+    .input-group
+      max-width: 200px
 </style>

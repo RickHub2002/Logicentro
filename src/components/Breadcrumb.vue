@@ -45,18 +45,23 @@ export default {
 };
 </script>
 
-<style scoped>
-.breadcrumb {
-  display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 1rem 0;
+<style lang="sass" scoped>
+.breadcrumb
+  display: flex
+  list-style: none
+  padding: 0
+  margin: 1rem 0
   
   color: #fff
-}
 
-.breadcrumb-item+.breadcrumb-item::before {
-  content: '>';
-  margin: 0 0.5rem;
-}
+.breadcrumb-item+.breadcrumb-item::before
+  content: '>'
+  margin: 0 0.5rem
+
+@media screen and (max-width: 768px)
+  .breadcrumb
+    text-align: center
+    justify-content: center
+    align-items: center
+
 </style>

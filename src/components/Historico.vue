@@ -9,7 +9,6 @@
             <h2>Motorista</h2>
             <h2>Data de saída</h2>
             <h2>Data de recebimento</h2>
-            <h2>Status</h2>
             <h2>Ação</h2>
           </li>
         </ul>
@@ -21,7 +20,6 @@
             <h2>João Silva</h2>
             <h2>07/09/2024 17:45:00</h2>
             <h2>07/09/2024 19:35:00</h2>
-            <h2>Concluído</h2>
             <button id="visualizar" type="submit">Visualizar</button>
           </li>
         </ul>
@@ -34,7 +32,6 @@
             <h2>João Silva</h2>
             <h2>07/09/2024 17:45:00</h2>
             <h2>07/09/2024 19:35:00</h2>
-            <h2>Concluído</h2>
             <button id="visualizar" type="submit">Visualizar</button>
           </li>
         </ul>
@@ -74,7 +71,10 @@ export default {
     display: grid
     grid-template-columns: repeat(7, 1fr) // Alinha 7 colunas com mesmo tamanho
     padding: 1rem 0 // Espaçamento vertical
+    justify-items: center
     gap: 1rem
+
+    text-align: center
                 
     h2
       @include titulo-styles
@@ -103,11 +103,47 @@ export default {
     border-radius: 0.313rem
 
 // Media queries para responsividade
-@media screen and (max-width: 1400px)
-  #card-info, #card-valores
-    background: blue
+@media screen and (max-width: 1024px)
+  #main-content
+    ul
+      list-style-type: none
 
-    display: flex
-    justify-content: center
-    flex-direction: column
+    #card
+      margin-bottom: 60px
+    #card-info,
+    #card-valores
+      display: flex
+      flex-direction: column
+      padding: 1rem 0 // Espaçamento vertical
+      align-items: center
+      gap: 1rem
+
+      text-align: center
+                  
+      h2
+        @include titulo-styles
+
+    #card-valores
+      border-top: 1px solid #000
+
+      margin-top: 0.75rem
+
+      h2
+        @include card-itens-styles
+
+    .card-info-itens
+      display: contents // Para que o grid funcione corretamente
+
+    #visualizar
+      cursor: pointer
+
+      width: 100px
+      height: 24px
+
+      background-color: $verde1
+      color: $branco
+
+      border: 0
+      border-radius: 0.313rem
+
 </style>
