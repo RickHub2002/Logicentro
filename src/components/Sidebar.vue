@@ -149,8 +149,7 @@ export default {
       sessionStorage.setItem('sidebarState', JSON.stringify(this.isOpen));
     },
     logout() {
-      this.$router.push('/login');
-      console.log('alo')
+      this.$router.push('/');
     },
   }
 };

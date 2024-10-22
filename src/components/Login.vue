@@ -5,8 +5,7 @@
 
     <form id="login-form" @submit.prevent="handleSubmit">
       <input type="text" v-model="username" placeholder="Digite seu usuário..." @input="clearCustomError('text')" />
-      <input type="password" v-model="password" placeholder="Digite sua senha..."
-        @input="clearCustomError('password')" />
+      <input type="password" v-model="password" placeholder="Digite sua senha..." @input="clearCustomError('password')" />
 
       <button type="submit">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -20,6 +19,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   name: 'Login',
   data() {
@@ -29,6 +30,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(['login']), // Mapeia a ação de login do Vuex
     clearCustomError(type) {
       const input = document.querySelector(`input[type="${type}"]`);
       input.setCustomValidity(''); // Limpa a mensagem de erro
@@ -57,11 +59,10 @@ export default {
 
       const isValidUser = this.username === 'Ricardo' && this.password === '123';
 
-      // Redirecionar se os campos estiverem preenchidos corretamente
       if (isValidUser) {
-        this.$router.push('/registros-pendentes');
+        this.login(); // Chama a ação de login do Vuex
+        this.$router.push('/registros-pendentes'); // Redireciona para outra página
       } else {
-        // Você pode adicionar uma mensagem de erro genérica aqui, se desejar
         alert('Usuário ou senha incorretos');
       }
     },
@@ -70,7 +71,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import '@/assets/sass/main.sass' 
+@import '@/assets/sass/main.sass'
 
 #login-container
   background-color: $azul3
