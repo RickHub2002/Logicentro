@@ -26,16 +26,16 @@
         <input type="text" id="modelo" v-model="dadosCadastro.modelo" placeholder="Digite o modelo do veículo" />
 
         <label for="ano">Ano do Veículo:</label>
-        <input type="number" @input="validarAno" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
+        <input type="number" @blur="validarAno" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
         
         <label for="tipo">Tipo do veículo:</label>
-        <input type="text" id="tipo" v-model="dadosCadastro.tipo" placeholder="Digite o tipo do véiculo" />
+        <input type="text" id="tipo" v-model="dadosCadastro.tipo_veiculo" placeholder="Digite o tipo do véiculo" />
         
         <label for="situacao">Situação do véiculo (A/I):</label>
-        <select class="situacao">
+        <select class="situacao" v-model="dadosCadastro.situacao">
           <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+          <option value="A">Ativo</option>
+          <option value="I">Inativo</option>
         </select>
         <p v-if="erroAno" style="color: red;">{{ erroAno }}</p>
       </div>
@@ -106,13 +106,14 @@
         </select>
       </div>
 
-      <button id="cadastrar" type="submit">Cadastrar</button>
+      <button id="cadastrar" type="button" @click="handleSubmit">Cadastrar</button>
     </div>
   </Card>
   </Layout>
 </template>
 
 <script>
+import axios from 'axios';
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
 export default {
@@ -129,7 +130,7 @@ export default {
         marca: '',
         modelo: '',
         ano: '',
-        tipo: '',
+        tipo_veiculo: '',
         situacao: '',
 
         nomeMotorista: '',
@@ -181,18 +182,50 @@ export default {
       }
     },
     validarAno() {
-      // Garantir que apenas números sejam inseridos e limitar a 4 dígitos
-      this.dadosCadastro.ano = this.dadosCadastro.ano.toString().slice(0, 4);
-      
-      // Validar se o ano está dentro do intervalo permitido (1900-2024)
-      if (this.dadosCadastro.ano >= 1970 && this.dadosCadastro.ano <= 2024) {
-        print("Brabo")
+      const anoAtual = new Date().getFullYear();
+      // Validar se o ano está dentro do intervalo permitido (1970-2024)
+      if (this.dadosCadastro.ano >= 1970 && this.dadosCadastro.ano <= anoAtual) {
+        console.log("Ano compatível");
+      } else {
+        this.dadosCadastro.ano = ''; // Limpa o campo se o ano for inválido
+        alert("Ano inválido. Por favor, insira um ano entre 1970 e "+anoAtual+"!");
       }
-      else {
-        this.dadosCadastro.ano = 's'
+    },
+    async handleSubmit() {
+      try {
+        if (this.tipoSelecionado==='veiculo'){
+          // Cria um objeto com os dados do formulário
+          const vehicleData = {
+            placa: this.dadosCadastro.placa,
+            marca: this.dadosCadastro.marca,
+            modelo: this.dadosCadastro.modelo,
+            ano: this.dadosCadastro.ano,
+            tipo_veiculo: this.dadosCadastro.tipo_veiculo,
+            situacao: this.dadosCadastro.situacao
+          };
+
+          // Envia os dados para o backend
+          const response = await axios.post('http://localhost:8000/api/veiculos/', vehicleData);
+
+          // Verifica se a requisição foi bem-sucedida
+          if (response.status === 200 || response.status === 201) {
+            console.log('Veículo cadastrado com sucesso:', response.data);
+            alert('Veículo cadastrado com sucesso!');
+            // Limpa os campos do 'formulário' após o envio
+            this.dadosCadastro.placa = '';
+            this.dadosCadastro.marca = '';
+            this.dadosCadastro.modelo = '';
+            this.dadosCadastro.ano = '';
+            this.dadosCadastro.tipo_veiculo = '';
+            this.dadosCadastro.situacao= '';
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao cadastrar: ', error);
+        alert('Erro ao cadastrar! Tente novamente.');
       }
     }
-  },
+  }
 };
 </script>
 
