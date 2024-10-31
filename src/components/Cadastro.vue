@@ -26,7 +26,7 @@
         <input type="text" id="modelo" v-model="dadosCadastro.modelo" placeholder="Digite o modelo do veículo" />
 
         <label for="ano">Ano do Veículo:</label>
-        <input type="number" @blur="validarAno" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
+        <input type="number" @blur="validarDados" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
         
         <label for="tipo">Tipo do veículo:</label>
         <input type="text" id="tipo" v-model="dadosCadastro.tipo_veiculo" placeholder="Digite o tipo do véiculo" />
@@ -37,7 +37,6 @@
           <option value="A">Ativo</option>
           <option value="I">Inativo</option>
         </select>
-        <p v-if="erroAno" style="color: red;">{{ erroAno }}</p>
       </div>
 
       <div class="input-group" v-if="tipoSelecionado === 'motorista'">
@@ -48,15 +47,15 @@
         <input type="text" id="cnh" v-model="dadosCadastro.cnh" placeholder="Digite a CNH" />
         
         <label for="cpf">Cpf do motorista:</label>
-        <input type="text" id="cpf" v-model="dadosCadastro.cpf" placeholder="Digite o cpf do motorista" />
+        <input type="text" id="cpf" @blur="validarDados" v-model="dadosCadastro.cpf" placeholder="Digite o CPF do motorista" />
 
         <label for="telefone">Telefone do motorista</label>
         <input type="text" id="telefone" v-model="dadosCadastro.telefone" placeholder="Digite o telefone do motorista" />
         
-        <select class="situacao">
-          <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+        <select class="situacao" v-model="dadosCadastro.situacao">
+          <option value="" disabled>Selecione a situação que o motorista se encontra(Ativo/Inativo)</option>
+          <option value="A">Ativo</option>
+          <option value="I">Inativo</option>
         </select>
       </div>
 
@@ -116,6 +115,7 @@
 import axios from 'axios';
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
+import * as validadores from '@/components/user.js'
 export default {
   name: 'Cadastro',
   components: {
@@ -181,14 +181,26 @@ export default {
         this.historicoCard = 'Histórico de usuário';
       }
     },
-    validarAno() {
-      const anoAtual = new Date().getFullYear();
-      // Validar se o ano está dentro do intervalo permitido (1970-2024)
-      if (this.dadosCadastro.ano >= 1970 && this.dadosCadastro.ano <= anoAtual) {
-        console.log("Ano compatível");
-      } else {
-        this.dadosCadastro.ano = ''; // Limpa o campo se o ano for inválido
-        alert("Ano inválido. Por favor, insira um ano entre 1970 e "+anoAtual+"!");
+    validarDados(){
+      if(this.tipoSelecionado==='veiculo'){
+        const validacao=validadores.validarAno(this.dadosCadastro.ano)
+        const anoAtual = new Date().getFullYear();
+
+        if(validacao){
+          console.log("Ano compatível");
+        }else if(validacao===false){
+          ano = ''; // Limpa o campo se o ano for inválido
+          alert("Ano inválido. Por favor, insira um ano entre 1970 e "+anoAtual+"!");
+        }
+      }else if(this.tipoSelecionado==='motorista'){
+        const validacao=validadores.validarCPF(this.dadosCadastro.cpf)
+
+        if(validacao){
+          console.log("CPF válido!");
+        }else if(validacao===false){
+          cpf='';
+          alert("CPF inválido! Tente novamente.")
+        }  
       }
     },
     async handleSubmit() {
@@ -218,6 +230,26 @@ export default {
             this.dadosCadastro.ano = '';
             this.dadosCadastro.tipo_veiculo = '';
             this.dadosCadastro.situacao= '';
+          }
+        }else if (this.tipoSelecionado==='motorista'){
+          const motoristaProfile = {
+            nome: this.dadosCadastro.nomeMotorista,
+            cpf: this.dadosCadastro.cpf,
+            cnh: this.dadosCadastro.cnh,
+            telefone: this.dadosCadastro.telefone,
+            situacao: this.dadosCadastro.situacao
+          };
+
+          const response = await axios.post('http://localhost:8000/api/motoristas/', motoristaProfile);
+
+          if (response.status === 200 || response.status === 201){
+            console.log('Motorista cadastrado com sucesso:', response.data);
+            alert('Motorista cadastrado com sucesso!');
+            this.dadosCadastro.nomeMotorista='';
+            this.dadosCadastro.cpf='';
+            this.dadosCadastro.cnh='';
+            this.dadosCadastro.telefone='';
+            this.dadosCadastro.situacao='';
           }
         }
       } catch (error) {
