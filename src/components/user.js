@@ -68,17 +68,34 @@ export function validarCNH(cnh){
         soma+=parseInt(cnh[i])*(peso-i);
       }
       const resto=soma%11;
-      return resto;
+      return resto < 2 ? 0 : 11 - resto;
     }
 
-    const digito1=calcularDigito(cnh, 9);
-    
-    const digito2=calcularDigito(cnh, 11);
+    const digito1=calcularDigito(cnh, 10);
+    const digito2=calcularDigito(cnh+digito1.toString(), 11);
 
     if(digito1 !== parseInt(cnh[9]) || digito2 !== parseInt(cnh[10])){
       return false;
     }else{
       return true;
+    }
+  }
+}
+
+export function validarTel(telefone){
+  //remove qualquer caracter não númerico
+  telefone=telefone.replace(/\D/g, '');
+  const ddd=parseInt(telefone.substring(0, 2));
+
+  if(telefone.length===11 || telefone.length===10){
+    if(11<=ddd && ddd<=99){
+      if(parseInt(telefone[2])!==9 && telefone.length===11){
+        return false;
+      }else{
+        return true;
+      }
+    }else{
+      return false;
     }
   }
 }

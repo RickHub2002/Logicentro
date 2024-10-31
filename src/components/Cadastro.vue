@@ -44,13 +44,13 @@
         <input type="text" id="nomeMotorista" v-model="dadosCadastro.nomeMotorista" placeholder="Digite o nome do motorista" />
 
         <label for="cnh">CNH:</label>
-        <input type="text" id="cnh" v-model="dadosCadastro.cnh" placeholder="Digite a CNH" />
+        <input type="text" id="cnh" @blur="validarDados" v-model="dadosCadastro.cnh" placeholder="Digite a CNH" />
         
-        <label for="cpf">Cpf do motorista:</label>
+        <label for="cpf">CPF do motorista:</label>
         <input type="text" id="cpf" @blur="validarDados" v-model="dadosCadastro.cpf" placeholder="Digite o CPF do motorista" />
 
         <label for="telefone">Telefone do motorista</label>
-        <input type="text" id="telefone" v-model="dadosCadastro.telefone" placeholder="Digite o telefone do motorista" />
+        <input type="text" id="telefone" @blur="validarDados" v-model="dadosCadastro.telefone" placeholder="Digite o telefone do motorista" />
         
         <select class="situacao" v-model="dadosCadastro.situacao">
           <option value="" disabled>Selecione a situação que o motorista se encontra(Ativo/Inativo)</option>
@@ -194,13 +194,35 @@ export default {
         }
       }else if(this.tipoSelecionado==='motorista'){
         const validacao=validadores.validarCPF(this.dadosCadastro.cpf)
+        const validacao2=validadores.validarCNH(this.dadosCadastro.cnh)
+        const validacao3=validadores.validarTel(this.dadosCadastro.telefone);
 
-        if(validacao){
-          console.log("CPF válido!");
-        }else if(validacao===false){
-          cpf='';
-          alert("CPF inválido! Tente novamente.")
-        }  
+        if(this.dadosCadastro.cpf){
+          if(validacao){
+            console.log("CPF válido!");
+          }else if(validacao===false){
+            this.dadosCadastro.cpf='';
+            alert("CPF inválido! Tente novamente.")
+          }
+        }
+
+        if(this.dadosCadastro.cnh){
+          if(validacao2){
+            console.log("CNH válido!");
+          }else if(validacao===false){
+            this.dadosCadastro.cnh='';
+            alert("CNH inválido! Tente novamente.")
+          }   
+        }
+        
+        if(this.dadosCadastro.telefone){
+          if(validacao3){
+            console.log("Telefone válido!");
+          }else if(validacao===false){
+            this.dadosCadastro.telefone='';
+            alert("Telefone inválido! Tente novamente.")
+          }   
+        } 
       }
     },
     async handleSubmit() {
