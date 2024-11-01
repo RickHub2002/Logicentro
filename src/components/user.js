@@ -61,23 +61,54 @@ export function validarCNH(cnh){
   if(cnh.length!==11 || /^(\d)\1+$/.test(cnh)){
     return false;
   }else{
-    //calcula os dígitos verificador
-    function calcularDigito(cnh, peso){
-      let soma=0;
-      for (let i=0; i<peso-1; i++){
-        soma+=parseInt(cnh[i])*(peso-i);
-      }
-      const resto=soma%11;
-      return resto < 2 ? 0 : 11 - resto;
+    const cnhForn = cnh.substring(0, 9); // Primeiros 9 dígitos
+    const digForn = cnh.substring(9, 11); // Últimos 2 dígitos
+
+    let soma = 0;
+    let mult = 9;
+    let digito1;
+    let incrDig2 = 0;
+
+    // Cálculo do primeiro dígito verificador
+    for (let j = 0; j < 9; j++) {
+        soma += parseInt(cnhForn[j]) * mult;
+        mult--;
     }
 
-    const digito1=calcularDigito(cnh, 10);
-    const digito2=calcularDigito(cnh+digito1.toString(), 11);
+    digito1 = soma % 11;
+    if (digito1 === 10) {
+        incrDig2 = -2;
+    }
+    if (digito1 > 9) {
+        digito1 = 0;
+    }
 
-    if(digito1 !== parseInt(cnh[9]) || digito2 !== parseInt(cnh[10])){
-      return false;
-    }else{
-      return true;
+    // Cálculo do segundo dígito verificador
+    soma = 0;
+    mult = 1;
+    for (let j = 0; j < 9; j++) {
+        soma += parseInt(cnhForn[j]) * mult;
+        mult++;
+    }
+
+    let digito2;
+    if ((soma % 11) + incrDig2 < 0) {
+        digito2 = 11 + (soma % 11) + incrDig2;
+    } else {
+        digito2 = (soma % 11) + incrDig2;
+    }
+
+    if (digito2 > 9) {
+        digito2 = 0;
+    }
+
+    const digEnc = digito1.toString() + digito2.toString();
+
+    // Verifica se os dígitos verificadores estão corretos
+    if (digForn === digEnc) {
+        return true;
+    } else {
+        return false;
     }
   }
 }
