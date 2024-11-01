@@ -99,3 +99,37 @@ export function validarTel(telefone){
     }
   }
 }
+
+//valida o CNPJ dos motoristas
+export function validarCNPJ(cnpj){
+  //remove qualquer caracter não númerico
+  cnpj=cnpj.replace(/\D/g, '');
+  const pesos1=[5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+  const pesos2=[6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+  //verifica se o CPF tem 14 dígitos e se são todos repetidos
+  if(cnpj.length!==14 || /^(\d)\1+$/.test(cnpj)){
+    return false;
+  }else{
+    //calcula os dígitos verificador
+    function calcularDigito(cnpj, pesos){
+      let soma=0;
+      for (let i=0; i<pesos.length; i++){
+        soma+=parseInt(cnpj[i])*(pesos[i]);
+      }
+      const resto=soma%11;
+      return resto<2 ? 0 : 11-resto;
+    }
+
+    const digito1=calcularDigito(cnpj.slice(0, 12), pesos1);
+    const digito2=calcularDigito(cnpj.slice(0, 12)+digito1.toString(), pesos2);
+
+    if(digito1 !== parseInt(cnpj[12]) || digito2 !== parseInt(cnpj[13])){
+      return false;
+    }else{
+      return true;
+    }
+  }
+}
+
+

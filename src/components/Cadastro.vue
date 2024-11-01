@@ -64,7 +64,7 @@
         <input type="text" id="nomeEmpresa" v-model="dadosCadastro.nomeEmpresa" placeholder="Digite o nome da empresa" />
 
         <label for="cnpj">CNPJ:</label>
-        <input type="text" id="cnpj" v-model="dadosCadastro.cnpj" placeholder="Digite o CNPJ" />
+        <input type="text" @blur="validarDados" id="cnpj" v-model="dadosCadastro.cnpj" placeholder="Digite o CNPJ" />
         
         <label for="logradouro">Logradouro:</label>
         <input type="text" id="logradouro" v-model="dadosCadastro.logradouro" placeholder="Digite o logradouro da empresa" />
@@ -75,10 +75,10 @@
         <label for="estado">Estado: </label>
         <input type="text" id="estado" v-model="dadosCadastro.estado" placeholder="Digite o estado da empresa" />
               
-        <select class="situacao">
+        <select class="situacao" v-model="dadosCadastro.situacao">
           <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
-          <option value="Ativo">Ativo</option>
-          <option value="Inativo">Inativo</option>
+          <option value="A">Ativo</option>
+          <option value="I">Inativo</option>
         </select>
       </div>
 
@@ -209,7 +209,7 @@ export default {
         if(this.dadosCadastro.cnh){
           if(validacao2){
             console.log("CNH válido!");
-          }else if(validacao===false){
+          }else if(validacao2===false){
             this.dadosCadastro.cnh='';
             alert("CNH inválido! Tente novamente.")
           }   
@@ -218,11 +218,20 @@ export default {
         if(this.dadosCadastro.telefone){
           if(validacao3){
             console.log("Telefone válido!");
-          }else if(validacao===false){
+          }else if(validacao3===false){
             this.dadosCadastro.telefone='';
             alert("Telefone inválido! Tente novamente.")
           }   
         } 
+      }else if(this.tipoSelecionado==='empresa'){
+        const validacao4=validadores.validarCNPJ(this.dadosCadastro.cnpj);
+
+        if(validacao4){
+          console.log("CNPJ válido!");
+        }else if(validacao4===false){
+          this.dadosCadastro.cnpj='';
+          alert("CNPJ inválido! Tente novamente.")
+        }   
       }
     },
     async handleSubmit() {
@@ -271,6 +280,28 @@ export default {
             this.dadosCadastro.cpf='';
             this.dadosCadastro.cnh='';
             this.dadosCadastro.telefone='';
+            this.dadosCadastro.situacao='';
+          }
+        }else if (this.tipoSelecionado==='empresa'){
+          const empresaProfile = {
+            nome: this.dadosCadastro.nomeEmpresa,
+            cnpj: this.dadosCadastro.cnpj,
+            logradouro: this.dadosCadastro.logradouro,
+            cidade: this.dadosCadastro.cidade,
+            estado: this.dadosCadastro.estado,
+            situacao: this.dadosCadastro.situacao
+          };
+
+          const response = await axios.post('http://localhost:8000/api/empresas/', empresaProfile);
+
+          if (response.status === 200 || response.status === 201){
+            console.log('Empresa cadastrada com sucesso:', response.data);
+            alert('Empresa cadastrada com sucesso!');
+            this.dadosCadastro.nomeEmpresa='';
+            this.dadosCadastro.cnpj='';
+            this.dadosCadastro.logradouro='';
+            this.dadosCadastro.cidade='';
+            this.dadosCadastro.estado='';
             this.dadosCadastro.situacao='';
           }
         }
