@@ -195,7 +195,7 @@ export default {
       }else if(this.tipoSelecionado==='motorista'){
         const validacao=validadores.validarCPF(this.dadosCadastro.cpf)
         const validacao2=validadores.validarCNH(this.dadosCadastro.cnh)
-        const validacao3=validadores.validarTel(this.dadosCadastro.telefone);
+        const validacao3=validadores.validarTel(this.dadosCadastro.telefone)
 
         if(this.dadosCadastro.cpf){
           if(validacao){
@@ -222,7 +222,8 @@ export default {
             this.dadosCadastro.telefone='';
             alert("Telefone inválido! Tente novamente.")
           }   
-        } 
+        }
+
       }else if(this.tipoSelecionado==='empresa'){
         const validacao4=validadores.validarCNPJ(this.dadosCadastro.cnpj);
 

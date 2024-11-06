@@ -5,7 +5,7 @@
             <form id="form-container">
                 <div class="input-group">
                     <label for="tipo-selecao">Selecione uma Opção:</label>
-                    <select id="tipo-selecao" v-model="saida_entrada">
+                    <select id="tipo-selecao" v-model="operacao">
                         <option value="" disabled selected>Selecione uma opção...</option>
                         <option value="saída">Saída</option>
                         <option value="recebimento">Recebimento</option>
@@ -74,12 +74,12 @@
                 </div>
                 <div class="input-group">
                     <label for="notaFiscal">N° da nota fiscal:</label>
-                    <input type="text" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_fiscal"/>
+                    <input type="number" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_f"/>
                 </div>
                 <div class="input-group">
                     <label for="mensagem">Observações adicionais:</label>
                     <textarea id="mensagem" rows="4" placeholder="Escreva qualquer observação.."></textarea>
-                    <button id="cadastrar" type="submit">Cadastrar</button>
+                    <button id="cadastrar" type="button" @click="handleSubmit">Cadastrar</button>
                 </div>
             </form>
             <!--form-container-->
@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
 import { Value } from 'sass';
@@ -102,27 +103,36 @@ export default {
             mensagem: 'Ola',
             motoristas: [],
             motoristaSelecionado: "",
-            cnhMotorista: '',
+            cnhMotorista: "",
 
-
+            user_saida: "",
+            user_entrada: "",
 
             empresas: [],
             origemSelecionada: "",
             destinoSelecionado: "",
 
             veiculo: [],
+            id_veiculo: "",
             placa: "",
             modelo: "",
             tipo_veiculo: "",
+            lacre1_saida: "",
+            lacre2_saida: null,
+            lacre1_entrada: "",
+            lacre2_entrada: null,
             lacre_1: "",
-            lacre_2: null,
+            lacre_2: "",
 
             operacao: "",
-            saida_entrada: "",
-            data_origem: null,
-            data_destino: null,
+            data_saida: "",
+            data_recebimento: "",
+            mdfe_saida: "",
+            nota_fiscal_saida: "",
+            mdfe_entrada: "",
+            nota_fiscal_entrada: "",
+            nota_f: "",
             mdfe: "",
-            nota_fiscal: "",
         };
     },
     computed: {
@@ -161,6 +171,7 @@ export default {
                     if (responseVeiculo.ok) {
                         this.veiculo = await responseVeiculo.json();
                         console.log("Veículo selecionado:", this.veiculo.id_veiculo);
+                        this.id_veiculo=this.veiculo.id_veiculo;
                         this.tipo_veiculo=this.veiculo.tipo_veiculo;
                         this.modelo=this.veiculo.modelo;
                     } else {
@@ -172,6 +183,65 @@ export default {
                 }
             } catch (error) {
                 console.error('Erro na requisição:', error);
+            }
+        },
+        async handleSubmit(){
+            if (this.operacao==='saída' && this.verificarCampos()){
+                this.data_saida=this.obterDataAtual();
+
+                const operacaoData={
+                    veiculo: this.id_veiculo,
+                    placa: this.placa,
+                    motorista: this.motoristaSelecionado,
+                    empresa_origem: this.origemSelecionada,
+                    user_saida: this.user_saida,
+                    dta_saida: this.data_saida,
+                    empresa_destino: this.destinoSelecionado,
+                    status: 'Pendente',
+                    nro_mdfe_saida: this.mdfe_saida,
+                    nro_notafiscal_saida: this.nota_fiscal_saida,
+                    nro_lacre1_saida: this.lacre1_saida,
+                    nro_lacre2_saida: this.lacre2_saida
+                };
+
+                const response=await axios.post('http://localhost:8000/api/operacoes/', operacaoData);
+
+                if(response.status===200 || response.status===201){
+                    console.log('Registro feito com sucesso: ', response.data);
+                    console.log({
+                    motorista: this.motoristaSelecionado,
+                    nro_lacre1_saida: this.lacre1_saida,
+                    nro_lacre2_saida: this.lacre2_saida,
+                    nro_mdfe_saida: this.mdfe_saida,
+                    nro_notafiscal_saida: this.nota_fiscal_saida,
+                    empresa_origem: this.origemSelecionada,
+                    empresa_destino: this.destinoSelecionado,
+                    placa: this.placa,
+                    status: this.status,
+                    user_saida: this.user_saida,
+                    dta_saida: this.data_saida,
+                    veiculo: this.id_veiculo
+                    });
+                    alert('Registro bem sucedido!');
+                    this.motoristaSelecionado='',
+                    this.cnhMotorista='',
+                    this.user_saida='',
+                    this.origemSelecionada='',
+                    this.destinoSelecionado='',
+                    this.placa='',
+                    this.modelo='',
+                    this.tipo_veiculo='',
+                    this.lacre1_saida='',
+                    this.lacre2_saida='',
+                    this.operacao='',
+                    this.data_saida='',
+                    this.mdfe_saida='',
+                    this.nota_fiscal_saida=''
+                    this.mdfe='',
+                    this.nota_f='',
+                    this.lacre_1='',
+                    this.lacre_2=''
+                }
             }
         },
         atualizarCNH() {
@@ -190,6 +260,76 @@ export default {
             if(this.destinoSelecionado){
                 console.log("Destino selecionado:", this.destinoSelecionado);
             }
+        },
+        obterDataAtual() {
+            const data = new Date();
+            
+            // Formatar data como "dd/mm/yyyy hh:mm:ss"
+            const dia = String(data.getDate()).padStart(2, '0');
+            const mes = String(data.getMonth() + 1).padStart(2, '0'); // Meses começam do 0
+            const ano = data.getFullYear();
+            
+            return `${ano}-${mes}-${dia}`;
+        },
+        verificarCampos(){
+            if(!this.lacre_1){
+                alert('Digite o número do 1º lacre!');
+                return false;
+            }else{
+                if(this.operacao==='saída'){
+                    this.lacre1_saida=this.lacre_1;
+                }else{
+                    this.lacre1_entrada=this.lacre_1;
+                }
+            }
+
+            if(this.lacre_2){
+                if(this.operacao==='saída'){
+                    this.lacre2_saida=this.lacre_2;
+                }else{
+                    this.lacre2_entrada=this.lacre_2;
+                }
+                
+            }
+
+            if(!this.motoristaSelecionado){
+                alert('Selecione o motorista designado!');
+                return false;
+            }
+
+            if(!this.origemSelecionada){
+                alert('Selecione a empresa de origem!');
+                return false;
+            }
+
+            if(!this.destinoSelecionado){
+                alert('Selecione a empresa de destino!');
+                return false;
+            }
+
+            if(!this.mdfe){
+                alert('Digite o número do MDF-e!');
+                return false;
+            }else{
+                if(this.operacao==='saída'){
+                    this.mdfe_saida=this.mdfe;
+                }else{
+                    this.mdfe_entrada=this.mdfe;
+                }
+            }
+
+            if(!this.nota_f){
+                alert('Digite o número da nota fiscal!');
+                return false;
+            }else{
+                if(this.operacao==='saída'){
+                    this.nota_fiscal_saida=this.nota_f;
+                }else{
+                    this.nota_fiscal_entrada=this.nota_f;
+                }
+            }
+
+            return true;
         }
     },    
     watch: {

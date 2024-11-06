@@ -128,6 +128,8 @@ export function validarTel(telefone){
     }else{
       return false;
     }
+  }else{
+    return false;
   }
 }
 
