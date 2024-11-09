@@ -164,6 +164,22 @@ export default {
                     console.error('Erro ao buscar empresas');
                 }
 
+                // Verifique se a placa está definida antes de fazer a requisição
+                if (this.placa) {
+                    const responseVeiculo = await fetch(`http://localhost:8000/api/veiculos/${this.placa}`);
+                    console.log('Placa digitada: ', this.placa);
+                    if (responseVeiculo.ok) {
+                        this.veiculo = await responseVeiculo.json();
+                        console.log("Veículo selecionado:", this.veiculo.id_veiculo);
+                        this.id_veiculo=this.veiculo.id_veiculo;
+                        this.tipo_veiculo=this.veiculo.tipo_veiculo;
+                        this.modelo=this.veiculo.modelo;
+                    } else {
+                        console.error('Erro ao buscar veículos');
+                        this.veiculo = null;  // Resetar veiculo em caso de erro
+                    }
+                }
+
             } catch (error) {
                 console.error('Erro na requisição:', error);
             }
@@ -323,22 +339,8 @@ export default {
                     this.nota_fiscal_entrada=this.nota_f;
                 }
             }
-
-            // Verifique se a placa está definida antes de fazer a requisição
-            if (this.placa) {
-                const responseVeiculo = await fetch(`http://localhost:8000/api/veiculos/${this.placa}`);
-                console.log('Placa digitada: ', this.placa);
-                if (responseVeiculo.ok) {
-                    this.veiculo = await responseVeiculo.json();
-                    console.log("Veículo selecionado:", this.veiculo.id_veiculo);
-                    this.id_veiculo=this.veiculo.id_veiculo;
-                    this.tipo_veiculo=this.veiculo.tipo_veiculo;
-                    this.modelo=this.veiculo.modelo;
-                } else {
-                    console.error('Erro ao buscar veículos');
-                    this.veiculo = null;  // Resetar veiculo em caso de erro
-                }
-            }else{
+            
+            if(!this.placa){
                 alert('Digite a placa do veículo.');
                 return false;
             }
