@@ -8,8 +8,12 @@
             <span>{{ registro.placa }}</span>
           </li>
           <li class="card-info-item">
-            <span>Lacre</span>
-            <span>{{ registro.lacre }}</span>
+            <span>Lacre 1</span>
+            <span>{{ registro.lacre1 }}</span>
+          </li>
+          <li class="card-info-item">
+            <span>Lacre 2</span>
+            <span>{{ registro.lacre2 }}</span>
           </li>
           <li class="card-info-item">
             <span>Empresa origem</span>
@@ -51,37 +55,85 @@ export default {
   },
   data() {
     return {
-      registros: [
-        {
-          id: 1,
-          placa: '#43934B',
-          lacre: '0001459',
-          origem: 'MATRIZ',
-          destino: 'CD',
-          motorista: 'ARMANDO',
-          data: '12/09/2024 20:50:15',
-        },
-        {
-          id: 2,
-          placa: '#43934C',
-          lacre: '0001459',
-          origem: 'MATRIZ',
-          destino: 'CD',
-          motorista: 'ARMANDO',
-          data: '12/09/2024 20:50:12',
-        },
-        {
-          id: 3,
-          placa: '#43934C',
-          lacre: '0001459',
-          origem: 'MATRIZ',
-          destino: 'CD',
-          motorista: 'ARMANDO',
-          data: '12/09/2024 20:50:10',
-        },
-        // Adicione outros registros aqui
-      ],
+      motoristas: [],
+      empresas: [],
+      veiculos: [],
+      operacoes: [],
+      registros: [],
     };
+  },
+  mounted() {
+    this.buscarDados(); // Executa a busca quando o componente é montado
+  },
+  methods: {
+    async buscarDados() {
+      try {
+        const [responseMotoristas, responseEmpresas, responseVeiculos, responseOperacoes] = await Promise.all([
+          fetch('http://localhost:8000/api/motoristas/'),
+          fetch('http://localhost:8000/api/empresas/'),
+          fetch('http://localhost:8000/api/veiculos/'),
+          fetch('http://localhost:8000/api/operacoes/')
+        ]);
+
+        if (responseMotoristas.ok) {
+          this.motoristas = await responseMotoristas.json();
+          console.log('Motoristas:', this.motoristas);
+        } else {
+          console.error('Erro ao buscar motoristas');
+        }
+
+        if (responseEmpresas.ok) {
+          this.empresas = await responseEmpresas.json();
+          console.log('Empresas:', this.empresas);
+        } else {
+          console.error('Erro ao buscar empresas');
+        }
+
+        if (responseVeiculos.ok) {
+          this.veiculos = await responseVeiculos.json();
+          console.log('Veículos:', this.veiculos);
+        } else {
+          console.error('Erro ao buscar veículos');
+        }
+
+        if (responseOperacoes.ok) {
+          const operacoesData = await responseOperacoes.json();
+          this.operacoes=Array.isArray(operacoesData) ? operacoesData : [];
+          console.log('Operações:', this.operacoes);
+          this.atualizarRegistros();
+        } else {
+          console.error('Erro ao buscar operações');
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+      }
+    },
+    atualizarRegistros() {
+      //segunda verificação da lista de operacoes que tem causado erros
+      if (!Array.isArray(this.operacoes) || this.operacoes.length === 0) {
+        console.warn("Nenhuma operação encontrada para atualizar registros.");
+        return;
+      }
+
+      this.registros = this.operacoes.filter(op => op.status === 'Pendente').map(op => {
+        const motorista = this.motoristas.find(m => m.id_motorista === op.motorista);
+        const empresaOrigem = this.empresas.find(e => e.id_empresa === op.empresa_origem);
+        const empresaDestino = this.empresas.find(e => e.id_empresa === op.empresa_destino);
+        const veiculo = this.veiculos.find(v => v.id_veiculo === op.veiculo);
+
+        return {
+          id: op.id_operacao,
+          placa: veiculo ? veiculo.placa : 'Desconhecido',
+          lacre1: op.nro_lacre1_saida,
+          lacre2: op.nro_lacre2_saida ? op.nro_lacre2_saida : 'Não utilizado',
+          origem: empresaOrigem ? empresaOrigem.nome : 'Desconhecida',
+          destino: empresaDestino ? empresaDestino.nome : 'Desconhecida',
+          motorista: motorista ? motorista.nome : 'Desconhecido',
+          data: op.dta_saida || 'Data indisponível'
+        };
+      });
+      console.log('Registros: ', this.registros);
+    }
   }
 };
 </script>
