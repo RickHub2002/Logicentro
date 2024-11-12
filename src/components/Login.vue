@@ -20,6 +20,7 @@
 
 <script>
 import { mapActions } from 'vuex';
+import { login } from '@/api/auth';
 
 export default {
   name: 'Login',
@@ -35,7 +36,7 @@ export default {
       const input = document.querySelector(`input[type="${type}"]`);
       input.setCustomValidity(''); // Limpa a mensagem de erro
     },
-    handleSubmit() {
+    async handleSubmit() {
       const usernameInput = document.querySelector('input[type="text"]');
       const passwordInput = document.querySelector('input[type="password"]');
 
@@ -58,6 +59,13 @@ export default {
       }
 
       const isValidUser = this.username === 'Ricardo' && this.password === '123';
+      const credentials = {
+        username: this.username,
+        password: this.password
+      };
+
+      const data = await login(credentials);
+      console.log(data);
 
       if (isValidUser) {
         this.login(); // Chama a ação de login do Vuex
