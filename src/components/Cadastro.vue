@@ -16,39 +16,35 @@
     <div v-if="tipoSelecionado" id="cadastro-card">
       <h2 id="titulo-selecionado" >{{ tituloCard }}</h2>
       <div class="input-group" v-if="tipoSelecionado === 'veiculo'">
-        <label for="placa">Placa do Veículo:</label>
-        <input type="text" id="placa" v-model="dadosCadastro.placa" placeholder="Digite a placa do veículo" />
-        
-        <label for="marca">Marca do Veículo:</label>
-        <input type="text" id="marca" v-model="dadosCadastro.marca" placeholder="Digite a marca do veículo" />
-
-        <label for="modelo">Modelo do Veículo:</label>
-        <input type="text" id="modelo" v-model="dadosCadastro.modelo" placeholder="Digite o modelo do veículo" />
-
-        <label for="ano">Ano do Veículo:</label>
-        <input type="number" @blur="validarDados" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
-        
-        <label for="tipo">Tipo do veículo:</label>
-        <input type="text" id="tipo" v-model="dadosCadastro.tipo_veiculo" placeholder="Digite o tipo do véiculo" />
-        
-        <label for="situacao">Situação do véiculo (A/I):</label>
-        <select class="situacao" v-model="dadosCadastro.situacao">
-          <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
-          <option value="A">Ativo</option>
-          <option value="I">Inativo</option>
-        </select>
+          <label for="placa">Placa do Veículo:</label>
+          <input type="text" id="placa" v-model="dadosCadastro.placa" placeholder="Digite a placa do veículo" />
+          
+          <label for="marca">Marca do Veículo:</label>
+          <input type="text" id="marca" v-model="dadosCadastro.marca" placeholder="Digite a marca do veículo" />
+          <label for="modelo">Modelo do Veículo:</label>
+          <input type="text" id="modelo" v-model="dadosCadastro.modelo" placeholder="Digite o modelo do veículo" />
+          <label for="ano">Ano do Veículo:</label>
+          <input type="number" @blur="validarDados" id="ano" v-model="dadosCadastro.ano" placeholder="Digite o ano do veículo" />
+          
+          <label for="tipo">Tipo do veículo:</label>
+          <input type="text" id="tipo" v-model="dadosCadastro.tipo_veiculo" placeholder="Digite o tipo do véiculo" />
+          
+          <label for="situacao">Situação do véiculo (A/I):</label>
+          <select class="situacao" v-model="dadosCadastro.situacao">
+            <option value="" disabled>Selecione a situação que o veículo se encontra(Ativo/Inativo)</option>
+            <option value="A">Ativo</option>
+            <option value="I">Inativo</option>
+          </select>
       </div>
 
       <div class="input-group" v-if="tipoSelecionado === 'motorista'">
         <label for="nomeMotorista">Nome do Motorista:</label>
         <input type="text" id="nomeMotorista" v-model="dadosCadastro.nomeMotorista" placeholder="Digite o nome do motorista" />
-
         <label for="cnh">CNH:</label>
         <input type="text" id="cnh" @blur="validarDados" v-model="dadosCadastro.cnh" placeholder="Digite a CNH" />
         
         <label for="cpf">CPF do motorista:</label>
         <input type="text" id="cpf" @blur="validarDados" v-model="dadosCadastro.cpf" placeholder="Digite o CPF do motorista" />
-
         <label for="telefone">Telefone do motorista</label>
         <input type="text" id="telefone" @blur="validarDados" v-model="dadosCadastro.telefone" placeholder="Digite o telefone do motorista" />
         
@@ -107,6 +103,105 @@
 
       <button id="cadastrar" type="button" @click="handleSubmit">Cadastrar</button>
     </div>
+
+    <div v-if="tipoSelecionado">
+      <h3 id="titulo-selecionado">Histórico</h3>
+      <div v-if="tipoSelecionado === 'veiculo'" v-for="veiculo in veiculos" :key="veiculo.id">
+        <ul id="card-info">
+          <li class="card-info-item">
+              <span>Placa</span>
+              <span>{{ veiculo.placa }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Marca</span>
+              <span>{{ veiculo.marca }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Modelo</span>
+              <span>{{ veiculo.modelo }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Ano</span>
+              <span>{{ veiculo.ano }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Tipo</span>
+              <span>{{ veiculo.tipo_veiculo }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Situação</span>
+              <span>{{ veiculo.situacao }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Ações</span>
+              <a><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.2499 3.66665H16.4083C15.9697 1.53411 14.0937 0.00275 11.9166 0H10.0832C7.90602 0.00275 6.0301 1.53411 5.59156 3.66665H2.7499C2.24365 3.66665 1.83325 4.07705 1.83325 4.5833C1.83325 5.08956 2.24365 5.5 2.7499 5.5H3.66656V17.4167C3.66961 19.9467 5.71986 21.997 8.2499 22H13.7499C16.2799 21.997 18.3302 19.9467 18.3333 17.4167V5.5H19.2499C19.7562 5.5 20.1666 5.08961 20.1666 4.58335C20.1666 4.07709 19.7562 3.66665 19.2499 3.66665ZM10.0833 15.5833C10.0833 16.0896 9.67286 16.5 9.1666 16.5C8.6603 16.5 8.2499 16.0896 8.2499 15.5833V10.0833C8.2499 9.57709 8.6603 9.1667 9.16656 9.1667C9.67281 9.1667 10.0832 9.57709 10.0832 10.0833V15.5833H10.0833ZM13.7499 15.5833C13.7499 16.0896 13.3395 16.5 12.8333 16.5C12.327 16.5 11.9166 16.0896 11.9166 15.5833V10.0833C11.9166 9.57709 12.327 9.1667 12.8333 9.1667C13.3395 9.1667 13.7499 9.57709 13.7499 10.0833V15.5833ZM7.49 3.66665C7.8799 2.56876 8.9182 1.83472 10.0833 1.8333H11.9166C13.0817 1.83472 14.12 2.56876 14.5099 3.66665H7.49Z" fill="#1E1E2F"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div v-if="tipoSelecionado === 'motorista'" v-for="motorista in motoristas" :key="motorista.id">
+        <ul id="card-info">
+          <li class="card-info-item">
+              <span>Nome</span>
+              <span>{{ motorista.nome }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>CPF</span>
+              <span>{{ motorista.cpf }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>CNH</span>
+              <span>{{ motorista.cnh }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Telefone</span>
+              <span>{{ motorista.telefone }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Situação</span>
+              <span>{{ motorista.situacao }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Ações</span>
+              <a><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.2499 3.66665H16.4083C15.9697 1.53411 14.0937 0.00275 11.9166 0H10.0832C7.90602 0.00275 6.0301 1.53411 5.59156 3.66665H2.7499C2.24365 3.66665 1.83325 4.07705 1.83325 4.5833C1.83325 5.08956 2.24365 5.5 2.7499 5.5H3.66656V17.4167C3.66961 19.9467 5.71986 21.997 8.2499 22H13.7499C16.2799 21.997 18.3302 19.9467 18.3333 17.4167V5.5H19.2499C19.7562 5.5 20.1666 5.08961 20.1666 4.58335C20.1666 4.07709 19.7562 3.66665 19.2499 3.66665ZM10.0833 15.5833C10.0833 16.0896 9.67286 16.5 9.1666 16.5C8.6603 16.5 8.2499 16.0896 8.2499 15.5833V10.0833C8.2499 9.57709 8.6603 9.1667 9.16656 9.1667C9.67281 9.1667 10.0832 9.57709 10.0832 10.0833V15.5833H10.0833ZM13.7499 15.5833C13.7499 16.0896 13.3395 16.5 12.8333 16.5C12.327 16.5 11.9166 16.0896 11.9166 15.5833V10.0833C11.9166 9.57709 12.327 9.1667 12.8333 9.1667C13.3395 9.1667 13.7499 9.57709 13.7499 10.0833V15.5833ZM7.49 3.66665C7.8799 2.56876 8.9182 1.83472 10.0833 1.8333H11.9166C13.0817 1.83472 14.12 2.56876 14.5099 3.66665H7.49Z" fill="#1E1E2F"/></svg></a>
+          </li>
+        </ul>
+      </div>
+      <div v-if="tipoSelecionado === 'empresa'" v-for="empresa in empresas" :key="empresa.id">
+        <ul id="card-info">
+          <li class="card-info-item">
+              <span>Empresa</span>
+              <span>{{ empresa.nome }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>CNPJ</span>
+              <span>{{ empresa.cnpj }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Logradouro</span>
+              <span>{{ empresa.logradouro }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Cidade</span>
+              <span>{{ empresa.cidade }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Estado</span>
+              <span>{{ empresa.estado }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Situação</span>
+              <span>{{ empresa.situacao }}</span>
+          </li>
+          <li class="card-info-item">
+              <span>Ações</span>
+              <a><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19.2499 3.66665H16.4083C15.9697 1.53411 14.0937 0.00275 11.9166 0H10.0832C7.90602 0.00275 6.0301 1.53411 5.59156 3.66665H2.7499C2.24365 3.66665 1.83325 4.07705 1.83325 4.5833C1.83325 5.08956 2.24365 5.5 2.7499 5.5H3.66656V17.4167C3.66961 19.9467 5.71986 21.997 8.2499 22H13.7499C16.2799 21.997 18.3302 19.9467 18.3333 17.4167V5.5H19.2499C19.7562 5.5 20.1666 5.08961 20.1666 4.58335C20.1666 4.07709 19.7562 3.66665 19.2499 3.66665ZM10.0833 15.5833C10.0833 16.0896 9.67286 16.5 9.1666 16.5C8.6603 16.5 8.2499 16.0896 8.2499 15.5833V10.0833C8.2499 9.57709 8.6603 9.1667 9.16656 9.1667C9.67281 9.1667 10.0832 9.57709 10.0832 10.0833V15.5833H10.0833ZM13.7499 15.5833C13.7499 16.0896 13.3395 16.5 12.8333 16.5C12.327 16.5 11.9166 16.0896 11.9166 15.5833V10.0833C11.9166 9.57709 12.327 9.1667 12.8333 9.1667C13.3395 9.1667 13.7499 9.57709 13.7499 10.0833V15.5833ZM7.49 3.66665C7.8799 2.56876 8.9182 1.83472 10.0833 1.8333H11.9166C13.0817 1.83472 14.12 2.56876 14.5099 3.66665H7.49Z" fill="#1E1E2F"/></svg></a>
+          </li>
+        </ul>
+      </div>
+    </div>
   </Card>
   </Layout>
 </template>
@@ -156,9 +251,45 @@ export default {
       erroAno: '',
       tituloCard: '', // Para armazenar o título do card
       historicoCard: '',
+      veiculos: [],
+      motoristas: [],
+      empresas: [],
     };
   },
+  mounted(){
+    this.buscarDados();
+  },
   methods: {
+    async buscarDados() {
+      try {
+          const [responseMotoristas, responseEmpresas, responseVeiculos] = await Promise.all([
+              fetch('http://localhost:8000/api/motoristas/'),
+              fetch('http://localhost:8000/api/empresas/'),
+              fetch('http://localhost:8000/api/veiculos/')
+          ]);
+
+          if (responseMotoristas.ok) {
+              this.motoristas = await responseMotoristas.json();
+          } else {
+              console.error('Erro ao buscar motoristas');
+          }
+
+          if (responseEmpresas.ok) {
+              this.empresas = await responseEmpresas.json();
+          } else {
+              console.error('Erro ao buscar empresas');
+          }
+
+          if (responseVeiculos.ok){
+              this.veiculos=await responseVeiculos.json();
+          }else{
+              console.error('Erro ao buscar veículos');
+          }
+
+      } catch (error) {
+          console.error('Erro na requisição:', error);
+      }
+    },
     mostrarCadastro() {
       if (this.tipoSelecionado === 'veiculo') {
         this.tituloCard = 'Cadastro de Veículo';
@@ -399,6 +530,21 @@ export default {
   #topicos
     padding: 5px
     background-color: $cinza1
+
+#card-info
+  display: grid
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) // Faz o grid ser responsivo
+  gap: 1rem
+  padding: 10px
+
+.card-info-item
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  gap: .5rem
+
+  border-right: 1px solid #000
 
 @media screen and (max-width: 520px)
   .input-group

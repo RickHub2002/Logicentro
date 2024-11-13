@@ -64,8 +64,8 @@ export default {
         password: this.password
       };
 
-      const data = await login(credentials);
-      console.log(data);
+      //const data = await login(credentials);
+      //console.log(data);
 
       if (isValidUser) {
         this.login(); // Chama a ação de login do Vuex

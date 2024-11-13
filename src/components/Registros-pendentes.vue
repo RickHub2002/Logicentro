@@ -150,7 +150,6 @@ export default {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) // Faz o grid ser responsivo
     gap: 1rem
     padding: 1rem
-    margin-bottom: 2.5rem
 
   .card-info-item
     display: flex

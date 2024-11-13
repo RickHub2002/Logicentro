@@ -13,15 +13,15 @@
                 </div>
                 <div class="input-group">
                     <label for="lacre1">Número do lacre:</label>
-                    <input type="number" id="lacre1" placeholder="Ex: 005940.." v-model="lacre_1"/>
+                    <input type="number" id="lacre1" placeholder="Ex: 005940.." v-model="lacre_1" :disabled="!camposHabilitados"/>
                 </div>
                 <div class="input-group">
                     <label for="placa">Número da placa:</label>
-                    <input type="text" id="placa" placeholder="Ex: ABC-4321" v-model="placa" @blur="buscarDados"/>
+                    <input type="text" id="placa" placeholder="Ex: ABC-4321" v-model="placa" @blur="buscarDados" :disabled="!camposHabilitados"/>
                 </div>
                 <div class="input-group">
                     <label for="lacre2">Número do 2º lacre (opcional):</label>
-                    <input type="number" id="lacre2" placeholder="0005930" v-model="lacre_2"/>
+                    <input type="number" id="lacre2" placeholder="0005930" v-model="lacre_2" :disabled="!camposHabilitados"/>
                 </div>
                 <div class="input-group">
                     <label for="placa">Tipo do veículo:</label>
@@ -33,15 +33,16 @@
                 </div>
             </form>
             <!--form-container-->
+
         </Card>
         <Card>
             <h2 class="titulo">Informações do motorista e viagem</h2>
             <form id="form-container">
                 <div class="input-group">
                     <label for="tipo-selecao">Nome do motorista:</label>
-                    <select id="tipo-selecao" v-model="motoristaSelecionado" @change="atualizarCNH">
+                    <select id="tipo-selecao" v-model="motoristaSelecionado" @change="atualizarCNH" :disabled="!camposHabilitados">
                         <option value="" disabled selected>Selecione uma opção...</option>
-                        <option v-for="motorista in motoristas" :value="motorista.id_motorista" :key="motorista.id_motorista">{{motorista.nome}}</option>
+                        <option v-for="motorista in motoristasDisponiveis" :value="motorista.id_motorista" :key="motorista.id_motorista">{{motorista.nome}}</option>
                     </select>
                 </div>
                 <div class="input-group">
@@ -50,14 +51,14 @@
                 </div>
                 <div class="input-group">
                     <label for="tipo-selecao">Empresa de origem:</label>
-                    <select id="tipo-selecao" v-model="origemSelecionada">
+                    <select id="tipo-selecao" v-model="origemSelecionada" :disabled="!camposHabilitados">
                         <option value="" disabled selected>Selecione uma opção...</option>
                         <option v-for="empresa in empresas" :value="empresa.id_empresa" :key="empresa.id_empresa">{{empresa.nome}}</option>
                     </select>
                 </div>
                 <div class="input-group">
                     <label for="tipo-selecao">Empresa de destino:</label>
-                    <select id="tipo-selecao" v-model="destinoSelecionado" @my-event="origem_destino">
+                    <select id="tipo-selecao" v-model="destinoSelecionado" @my-event="origem_destino" :disabled="!camposHabilitados">
                         <option value="" disabled selected>Selecione uma opção...</option>
                         <option v-for="empresa in destinosFiltrados" :value="empresa.id_empresa" :key="empresa.id_empresa">{{empresa.nome}}</option>
                     </select>
@@ -70,16 +71,16 @@
             <form id="form-container">
                 <div class="input-group">
                     <label for="mdfe">N° da mdfe:</label>
-                    <input type="number" id="mdfe" placeholder="Ex: 148503" v-model="mdfe"/>
+                    <input type="number" id="mdfe" placeholder="Ex: 148503" v-model="mdfe" :disabled="!camposHabilitados"/>
                 </div>
                 <div class="input-group">
                     <label for="notaFiscal">N° da nota fiscal:</label>
-                    <input type="number" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_f"/>
+                    <input type="number" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_f" :disabled="!camposHabilitados"/>
                 </div>
                 <div class="input-group">
                     <label for="mensagem">Observações adicionais:</label>
-                    <textarea id="mensagem" rows="4" placeholder="Escreva qualquer observação.."></textarea>
-                    <button id="cadastrar" type="button" @click="handleSubmit">Cadastrar</button>
+                    <textarea id="mensagem" rows="4" placeholder="Escreva qualquer observação.."></textarea :disabled="!camposHabilitados">
+                    <button id="cadastrar" type="button" @click="handleSubmit" :disabled="!camposHabilitados">Cadastrar</button>
                 </div>
             </form>
             <!--form-container-->
@@ -91,7 +92,7 @@
 import axios from 'axios';
 import Layout from '@/components/Layout.vue';
 import Card from '@/components/Card.vue';
-import { Value } from 'sass';
+
 export default {
     name: 'Novo-registro',
     components: {
@@ -112,7 +113,7 @@ export default {
             origemSelecionada: "",
             destinoSelecionado: "",
 
-            veiculo: [],
+            veiculo: {},
             id_veiculo: "",
             placa: "",
             modelo: "",
@@ -133,50 +134,84 @@ export default {
             nota_fiscal_entrada: "",
             nota_f: "",
             mdfe: "",
+
+            operacoesPendentes: [],
+            motoristasDisponiveis: [],
+            placasEmUso: [],
         };
     },
     computed: {
-        destinosFiltrados(){
-            return this.empresas.filter(empresa => empresa.id_empresa!==this.origemSelecionada)
+        destinosFiltrados() {
+            return this.empresas.filter(empresa => empresa.id_empresa !== this.origemSelecionada);
+        },
+        camposHabilitados(){
+            return this.operacao;
         }
     },
-    mounted(){
-        this.buscarDados();
+    watch: {
+        placa(newVal) {
+            this.placa = this.formatarPlaca(newVal);
+            if (this.placasEmUso.includes(newVal) && this.operacao==='saída') {
+                alert("A placa digitada já está em uma operação pendente!");
+                this.placa = "";
+                this.modelo= "";
+                this.tipo_veiculo="";
+            }
+        }
     },
-    methods:{
+    mounted() {
+        this.buscarDados();
+        this.buscarOperacoesPendentes();
+    },
+    methods: {
+        async buscarOperacoesPendentes() {
+            try {
+                const response = await fetch('http://localhost:8000/api/operacoes');
+                const operacoes = await response.json();
+                this.operacoesPendentes = operacoes.filter(op => op.status === 'Pendente');
+                this.atualizarPlacasDisponiveis();
+                this.atualizarMotoristasDisponiveis();
+            } catch (error) {
+                console.error('Erro ao buscar operações pendentes', error);
+            }
+        },
+        atualizarPlacasDisponiveis() {
+            this.placasEmUso = this.operacoesPendentes.map(op => op.placa);
+            console.log("Placas em uso", this.placasEmUso);
+        },
+        atualizarMotoristasDisponiveis() {
+            const motoristasOcupados = this.operacoesPendentes.map(op => op.motorista);
+            this.motoristasDisponiveis = this.motoristas.filter(motorista => !motoristasOcupados.includes(motorista));
+            console.log("Motoristas disponíveis", this.motoristasDisponiveis);
+            console.log("Motoristas ocupados", this.motoristasOcupados);
+        },
         async buscarDados() {
             try {
-                const [responseMotoristas, responseEmpresas] = await Promise.all([
+                const [responseMotoristas, responseEmpresas, responseVeiculos] = await Promise.all([
                     fetch('http://localhost:8000/api/motoristas/'),
-                    fetch('http://localhost:8000/api/empresas/')
+                    fetch('http://localhost:8000/api/empresas/'),
+                    fetch('http://localhost:8000/api/veiculos/')
                 ]);
 
                 if (responseMotoristas.ok) {
-                    console.log("Motorista selecionado:", this.motoristaSelecionado);
                     this.motoristas = await responseMotoristas.json();
-                } else {
-                    console.error('Erro ao buscar motoristas');
                 }
 
                 if (responseEmpresas.ok) {
                     this.empresas = await responseEmpresas.json();
-                } else {
-                    console.error('Erro ao buscar empresas');
                 }
 
-                // Verifique se a placa está definida antes de fazer a requisição
+                if (responseVeiculos.ok) {
+                    this.veiculo = await responseVeiculos.json();
+                }
+
                 if (this.placa) {
                     const responseVeiculo = await fetch(`http://localhost:8000/api/veiculos/${this.placa}`);
-                    console.log('Placa digitada: ', this.placa);
                     if (responseVeiculo.ok) {
                         this.veiculo = await responseVeiculo.json();
-                        console.log("Veículo selecionado:", this.veiculo.id_veiculo);
-                        this.id_veiculo=this.veiculo.id_veiculo;
-                        this.tipo_veiculo=this.veiculo.tipo_veiculo;
-                        this.modelo=this.veiculo.modelo;
-                    } else {
-                        console.error('Erro ao buscar veículos');
-                        this.veiculo = null;  // Resetar veiculo em caso de erro
+                        this.id_veiculo = this.veiculo.id_veiculo;
+                        this.tipo_veiculo = this.veiculo.tipo_veiculo;
+                        this.modelo = this.veiculo.modelo;
                     }
                 }
 
@@ -184,11 +219,11 @@ export default {
                 console.error('Erro na requisição:', error);
             }
         },
-        async handleSubmit(){
-            if (this.operacao==='saída' && this.verificarCampos()){
-                this.data_saida=this.obterDataAtual();
+        async handleSubmit() {
+            if (this.operacao === 'saída' && this.verificarCampos()) {
+                this.data_saida = this.obterDataAtual();
 
-                const operacaoData={
+                const operacaoData = {
                     veiculo: this.id_veiculo,
                     placa: this.placa,
                     motorista: this.motoristaSelecionado,
@@ -203,161 +238,78 @@ export default {
                     nro_lacre2_saida: this.lacre2_saida
                 };
 
-                const response=await axios.post('http://localhost:8000/api/operacoes/', operacaoData);
-
-                if(response.status===200 || response.status===201){
-                    console.log('Registro feito com sucesso: ', response.data);
-                    console.log({
-                    motorista: this.motoristaSelecionado,
-                    nro_lacre1_saida: this.lacre1_saida,
-                    nro_lacre2_saida: this.lacre2_saida,
-                    nro_mdfe_saida: this.mdfe_saida,
-                    nro_notafiscal_saida: this.nota_fiscal_saida,
-                    empresa_origem: this.origemSelecionada,
-                    empresa_destino: this.destinoSelecionado,
-                    placa: this.placa,
-                    status: this.status,
-                    user_saida: this.user_saida,
-                    dta_saida: this.data_saida,
-                    veiculo: this.id_veiculo
-                    });
-                    alert('Registro bem sucedido!');
-                    this.motoristaSelecionado='',
-                    this.cnhMotorista='',
-                    this.user_saida='',
-                    this.origemSelecionada='',
-                    this.destinoSelecionado='',
-                    this.placa='',
-                    this.modelo='',
-                    this.tipo_veiculo='',
-                    this.lacre1_saida='',
-                    this.lacre2_saida='',
-                    this.operacao='',
-                    this.data_saida='',
-                    this.mdfe_saida='',
-                    this.nota_fiscal_saida=''
-                    this.mdfe='',
-                    this.nota_f='',
-                    this.lacre_1='',
-                    this.lacre_2=''
+                try {
+                    const response = await axios.post('http://localhost:8000/api/operacoes/', operacaoData);
+                    if (response.status === 200 || response.status === 201) {
+                        alert('Registro bem sucedido!');
+                        this.resetForm();
+                    }
+                } catch (error) {
+                    console.error('Erro ao registrar operação:', error);
                 }
-            }else if(this.operacao==='recebimento' && this.verificarCampos()){
-                this.data_recebimento=this.obertDataAtual();
+            } else if (this.operacao === 'recebimento' && this.verificarCampos()) {
+                this.data_recebimento = this.obterDataAtual();
 
-                const operacaoData={
+                const operacaoData = {
                     user_entrada: this.user_entrada,
                     nro_mdfe_entrada: this.mdfe_entrada,
                     nro_notafiscal_entrada: this.nota_fiscal_entrada,
                     nro_lacre1_entrada: this.lacre1_entrada,
                     nro_lacre2_entrada: this.lacre2_entrada
+                };
 
-                }
-
+                // Aqui você pode enviar os dados para a API
             }
+        },
+        formatarPlaca(placa) {
+            // Garante que a placa esteja em letras maiúsculas
+            return placa.toUpperCase();
         },
         atualizarCNH() {
-            console.log("Motorista selecionado:", this.motoristaSelecionado);
             const motorista = this.motoristas.find(m => m.id_motorista === this.motoristaSelecionado);
-            if (motorista) {
-                this.cnhMotorista = motorista.cnh;
-            }else{
-                this.cnhMotorista='';
-            }
-        },
-        origem_destino(){
-            if(this.origemSelecionada){
-                console.log("Origem selecionada:", this.origemSelecionada);
-            }
-            if(this.destinoSelecionado){
-                console.log("Destino selecionado:", this.destinoSelecionado);
-            }
+            this.cnhMotorista = motorista ? motorista.cnh : '';
         },
         obterDataAtual() {
             const data = new Date();
-            
-            // Formatar data como "dd/mm/yyyy hh:mm:ss"
             const dia = String(data.getDate()).padStart(2, '0');
-            const mes = String(data.getMonth() + 1).padStart(2, '0'); // Meses começam do 0
+            const mes = String(data.getMonth() + 1).padStart(2, '0');
             const ano = data.getFullYear();
-            
             return `${ano}-${mes}-${dia}`;
         },
-        async verificarCampos(){
-            if(!this.lacre_1){
-                alert('Digite o número do 1º lacre!');
-                return false;
-            }else{
-                if(this.operacao==='saída'){
-                    this.lacre1_saida=this.lacre_1;
-                }else{
-                    this.lacre1_entrada=this.lacre_1;
-                }
-            }
+        verificarCampos() {
+            if (!this.motoristaSelecionado) return alert('Selecione o motorista designado!');
+            if (!this.origemSelecionada) return alert('Selecione a empresa de origem!');
+            if (!this.destinoSelecionado) return alert('Selecione a empresa de destino!');
+            if (!this.placa) return alert('Digite a placa do veículo.');
 
-            if(this.lacre_2){
-                if(this.operacao==='saída'){
-                    this.lacre2_saida=this.lacre_2;
-                }else{
-                    this.lacre2_entrada=this.lacre_2;
-                }
-                
-            }
-
-            if(!this.motoristaSelecionado){
-                alert('Selecione o motorista designado!');
-                return false;
-            }
-
-            if(!this.origemSelecionada){
-                alert('Selecione a empresa de origem!');
-                return false;
-            }
-
-            if(!this.destinoSelecionado){
-                alert('Selecione a empresa de destino!');
-                return false;
-            }
-
-            if(!this.mdfe){
-                alert('Digite o número do MDF-e!');
-                return false;
-            }else{
-                if(this.operacao==='saída'){
-                    this.mdfe_saida=this.mdfe;
-                }else{
-                    this.mdfe_entrada=this.mdfe;
-                }
-            }
-
-            if(!this.nota_f){
-                alert('Digite o número da nota fiscal!');
-                return false;
-            }else{
-                if(this.operacao==='saída'){
-                    this.nota_fiscal_saida=this.nota_f;
-                }else{
-                    this.nota_fiscal_entrada=this.nota_f;
-                }
-            }
-            
-            if(!this.placa){
-                alert('Digite a placa do veículo.');
-                return false;
-            }
+            this.lacre1_saida = this.operacao === 'saída' ? this.lacre_1 : '';
+            this.mdfe_saida = this.operacao === 'saída' ? this.mdfe : '';
+            this.nota_fiscal_saida = this.operacao === 'saída' ? this.nota_f : '';
 
             return true;
-        }
-    },    
-    watch: {
-        origemSelecionada(newVal) {
-            this.origem_destino(); // Chama a função auxiliar, se necessário
         },
-        destinoSelecionado(newVal) {
-            this.origem_destino(); // Chama a função auxiliar, se necessário
+        resetForm() {
+            this.motoristaSelecionado = '';
+            this.cnhMotorista = '';
+            this.user_saida = '';
+            this.origemSelecionada = '';
+            this.destinoSelecionado = '';
+            this.placa = '';
+            this.modelo = '';
+            this.tipo_veiculo = '';
+            this.lacre1_saida = '';
+            this.lacre2_saida = '';
+            this.operacao = '';
+            this.data_saida = '';
+            this.mdfe_saida = '';
+            this.nota_fiscal_saida = '';
+            this.lacre_1 = '';
+            this.lacre_2 = '';
         }
     }
 };
 </script>
+
 
 <style lang="sass" scoped>
 @import '@/assets/sass/main.sass' // Usando o alias definido
