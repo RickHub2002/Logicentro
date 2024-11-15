@@ -9,8 +9,12 @@
             <input type="number" id="placa-saida" placeholder="Valor" />
           </div>
           <div class="input-group">
-            <label for="lacre-saida">Número do lacre:</label>
-            <input type="text" id="lacre-saida" placeholder="Valor" />
+            <label for="lacre1-saida">Número do 1º lacre:</label>
+            <input type="text" id="lacre1-saida" placeholder="Valor" />
+          </div>
+          <div class="input-group">
+            <label for="lacre2-saida">Número do 2º lacre (opcional):</label>
+            <input type="text" id="lacre2-saida" placeholder="Valor" />
           </div>
           <div class="input-group">
             <label for="motorista-saida">Nome do motorista:</label>
@@ -32,8 +36,12 @@
             <input type="number" id="placa-recebimento" placeholder="Valor" />
           </div>
           <div class="input-group">
-            <label for="lacre-recebimento">Número do lacre:</label>
-            <input type="text" id="lacre-recebimento" placeholder="Valor" />
+            <label for="lacre1-recebimento">Número do 1º lacre:</label>
+            <input type="text" id="lacre1-recebimento" placeholder="Valor" />
+          </div>
+          <div class="input-group">
+            <label for="lacre2-recebimento">Número do 2º lacre (opcional):</label>
+            <input type="text" id="lacre2-recebimento" placeholder="Valor" />
           </div>
           <div class="input-group">
             <label for="motorista-recebimento">Nome do motorista:</label>

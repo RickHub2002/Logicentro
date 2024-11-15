@@ -151,11 +151,22 @@ export default {
     watch: {
         placa(newVal) {
             this.placa = this.formatarPlaca(newVal);
-            if (this.placasEmUso.includes(newVal) && this.operacao==='saída') {
-                alert("A placa digitada já está em uma operação pendente!");
-                this.placa = "";
-                this.modelo= "";
-                this.tipo_veiculo="";
+            
+            if(newVal.length===7){
+                if (this.placasEmUso.includes(newVal) && this.operacao==='saída') {
+                    alert("A placa digitada já está em uma operação pendente!");
+                    this.placa = "";
+                    this.modelo= "";
+                    this.tipo_veiculo="";
+                }else if(this.operacao==='recebimento' && this.placasEmUso.includes(newVal)){
+                    this.procurarPlaca();
+                }
+                else if (!this.placasEmUso.includes(newVal) && this.operacao==='recebimento') {
+                    alert("A placa não está associada a nenhuma operação em andamento!");
+                    this.placa = "";
+                    this.modelo= "";
+                    this.tipo_veiculo="";
+                }
             }
         }
     },
@@ -170,20 +181,47 @@ export default {
                 const operacoes = await response.json();
                 this.operacoesPendentes = operacoes.filter(op => op.status === 'Pendente');
                 this.atualizarPlacasDisponiveis();
-                this.atualizarMotoristasDisponiveis();
             } catch (error) {
                 console.error('Erro ao buscar operações pendentes', error);
+            }
+        },
+        async procurarPlaca() {
+            this.placa = this.placa.toUpperCase();
+
+            if (this.operacao === 'recebimento' && this.placa.length === 7) {
+                try {
+                    const response = await fetch(`/api/operacoes/pendente/${this.placa}/`);
+                    
+                    if (response.ok) {
+                        // Tenta obter o JSON apenas se a resposta for bem-sucedida
+                        const data = await response.json();
+                        this.origemSelecionada = data.empresa_origem;
+                        console.log('Origem selecionada:', this.origemSelecionada);
+                        this.destinoSelecionado = data.empresa_destino;
+                        console.log('Destino recuperado:', this.destinoSelecionado);
+                        this.lacre1_saida = data.nro_lacre1_saida;
+                        console.log('Lacre 1 saída:', this.lacre1_saida);
+                        this.lacre2_saida = data.nro_lacre2_saida;
+                        console.log('Lacre 2 saída:', this.lacre2_saida);
+                        this.mdfe_saida = data.nro_mdfe_saida;
+                        console.log('Mdfe_saida:', this.mdfe_saida);
+                        this.nota_fiscal_saida = data.nro_notafiscal_saida;
+                        console.log('Nota Fiscal_saida:', this.nota_fiscal_saida);
+                        // Preenche outros campos necessários para a operação pendente
+                    } else {
+                        // Tenta obter a mensagem de erro, caso exista
+                        const errorData = await response.json().catch(() => ({ error: 'Erro desconhecido' }));
+                        alert(errorData.error || 'Erro ao buscar operação pendente.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao buscar operação pendente:', error);
+                    alert('Não foi possível buscar a operação. Verifique a conexão com o servidor.');
+                }
             }
         },
         atualizarPlacasDisponiveis() {
             this.placasEmUso = this.operacoesPendentes.map(op => op.placa);
             console.log("Placas em uso", this.placasEmUso);
-        },
-        atualizarMotoristasDisponiveis() {
-            const motoristasOcupados = this.operacoesPendentes.map(op => op.motorista);
-            this.motoristasDisponiveis = this.motoristas.filter(motorista => !motoristasOcupados.includes(motorista));
-            console.log("Motoristas disponíveis", this.motoristasDisponiveis);
-            console.log("Motoristas ocupados", this.motoristasOcupados);
         },
         async buscarDados() {
             try {
@@ -213,6 +251,8 @@ export default {
                         this.tipo_veiculo = this.veiculo.tipo_veiculo;
                         this.modelo = this.veiculo.modelo;
                     }
+
+
                 }
 
             } catch (error) {
