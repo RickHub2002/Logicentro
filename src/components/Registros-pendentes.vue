@@ -116,7 +116,7 @@ export default {
       }
 
       this.registros = this.operacoes.filter(op => op.status === 'Pendente').map(op => {
-        const motorista = this.motoristas.find(m => m.id_motorista === op.motorista);
+        const motorista = this.motoristas.find(m => m.id_motorista === op.torista_saida);
         const empresaOrigem = this.empresas.find(e => e.id_empresa === op.empresa_origem);
         const empresaDestino = this.empresas.find(e => e.id_empresa === op.empresa_destino);
         const veiculo = this.veiculos.find(v => v.id_veiculo === op.veiculo);
