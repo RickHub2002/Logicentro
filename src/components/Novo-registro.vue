@@ -13,15 +13,15 @@
                 </div>
                 <div class="input-group">
                     <label for="lacre1">Número do lacre:</label>
-                    <input type="number" id="lacre1" placeholder="Ex: 005940.." v-model="lacre1" :disabled="!camposHabilitados"/>
+                    <input type="number" id="lacre1" placeholder="Ex: 005940.." v-model="lacre1" :disabled="camposHabilitados()"/>
                 </div>
                 <div class="input-group">
                     <label for="placa">Número da placa:</label>
-                    <input type="text" id="placa" placeholder="Ex: ABC-4321" v-model="placa" @change="procurarPlaca" @blur="buscarDados" :disabled="!camposHabilitados"/>
+                    <input type="text" id="placa" placeholder="Ex: ABC-4321" v-model="placa" @change="procurarPlaca" @blur="buscarDados" :disabled="camposHabilitados()"/>
                 </div>
                 <div class="input-group">
                     <label for="lacre2">Número do 2º lacre (opcional):</label>
-                    <input type="number" id="lacre2" placeholder="0005930" v-model="lacre2" :disabled="!camposHabilitados"/>
+                    <input type="number" id="lacre2" placeholder="0005930" v-model="lacre2" :disabled="camposHabilitados()"/>
                 </div>
                 <div class="input-group">
                     <label for="placa">Tipo do veículo:</label>
@@ -40,7 +40,7 @@
             <form id="form-container">
                 <div class="input-group">
                     <label for="tipo-selecao">Nome do motorista:</label>
-                    <select id="tipo-selecao" v-model="motoristaSelecionado" :disabled="!camposHabilitados" @change="buscarCNH">
+                    <select id="tipo-selecao" v-model="motoristaSelecionado" :disabled="camposHabilitados()" @change="buscarCNH">
                         <option value="" disabled selected>Selecione uma opção...</option>
                         <option v-for="motorista in motoristas" :value="motorista.id_motorista" :key="motorista.id_motorista">{{motorista.nome}}</option>
                     </select>
@@ -51,26 +51,26 @@
                 </div>
                 <div class="input-group">
                     <label for="tipo-selecao">Empresa de origem:</label>
-                    <template v-if="camposHabilitados('origem')">
-                        <select id="tipo-selecao" v-model="origemSelecionada" :disabled="!camposHabilitados('origem')">
+                    <template v-if="this.operacao==='saída'">
+                        <select id="tipo-selecao" v-model="origemSelecionada" :disabled="camposHabilitados('origem')">
                             <option value="" disabled selected>Selecione uma opção...</option>
                             <option v-for="empresa in empresas" :value="empresa.id_empresa" :key="empresa.id_empresa">{{empresa.nome}}</option>
                         </select>
                     </template>
                     <template v-else>
-                        <input type="text" :value="origemSelecionada" readonly />
+                        <input type="text" :value="this.origemSelecionada" readonly />
                     </template> 
                 </div>
                 <div class="input-group">
                     <label for="tipo-selecao">Empresa de destino:</label>
-                    <template v-if="camposHabilitados('origem')">
-                        <select id="tipo-selecao" v-model="destinoSelecionado" @my-event="origem_destino" :disabled="!camposHabilitados('destino')">
+                    <template v-if="this.operacao==='saída'">
+                        <select id="tipo-selecao" v-model="destinoSelecionado" @my-event="origem_destino" :disabled="camposHabilitados('destino')">
                             <option value="" disabled selected>Selecione uma opção...</option>
                             <option v-for="empresa in destinosFiltrados" :value="empresa.id_empresa" :key="empresa.id_empresa">{{empresa.nome}}</option>
                         </select>
                     </template>
                     <template v-else>
-                        <input type="text" :value="destinoSelecionado" readonly />
+                        <input type="text" :value="this.destinoSelecionado" readonly />
                     </template>
                 </div>
             </form>
@@ -81,16 +81,16 @@
             <form id="form-container">
                 <div class="input-group">
                     <label for="mdfe">N° da mdfe:</label>
-                    <input type="number" id="mdfe" placeholder="Ex: 148503" v-model="mdfe" :disabled="!camposHabilitados"/>
+                    <input type="number" id="mdfe" placeholder="Ex: 148503" v-model="mdfe" :disabled="camposHabilitados()"/>
                 </div>
                 <div class="input-group">
                     <label for="notaFiscal">N° da nota fiscal:</label>
-                    <input type="number" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_fiscal" :disabled="!camposHabilitados()"/>
+                    <input type="number" id="notaFiscal" placeholder="Ex: AVBDAUDBu03281381" v-model="nota_fiscal" :disabled="camposHabilitados()"/>
                 </div>
                 <div class="input-group">
                     <label for="mensagem">Observações adicionais:</label>
-                    <textarea id="mensagem" rows="4" placeholder="Escreva qualquer observação.." v-model="observacao" :disabled="!camposHabilitados()"></textarea>
-                    <button id="cadastrar" type="button" @click="handleSubmit" :disabled="!camposHabilitados">Cadastrar</button>
+                    <textarea id="mensagem" rows="4" placeholder="Escreva qualquer observação.." v-model="observacao" :disabled="camposHabilitados()"></textarea>
+                    <button id="cadastrar" type="button" @click="handleSubmit" :disabled="camposHabilitados()">Cadastrar</button>
                 </div>
             </form>
             <!--form-container-->
@@ -139,7 +139,8 @@ export default {
             lacre1: "",
             lacre2: null,
             mdfe: "",
-            nota_fiscal: ""
+            nota_fiscal: "",
+            motorista_saida: ""
         };
     },
     computed: {
@@ -158,6 +159,12 @@ export default {
                     this.placasEmUso.includes(newVal) ? this.procurarPlaca() : this.alertarPlacaNaoEncontrada();
                 }
             }
+        },
+        operacao(newVal){
+            if(newVal==='recebimento'){
+                this.origemSelecionada='';
+                this.destinoSelecionado='';
+            }
         }
     },
     mounted() {
@@ -165,14 +172,22 @@ export default {
         this.buscarOperacoesPendentes();
     },
     methods: {
-        camposHabilitados(campo=null){
+        camposHabilitados(campo = null) {
+            // Verifica se a operação é 'recebimento'
             if (this.operacao === 'recebimento') {
+                // Desabilita apenas os selects 'origem' e 'destino'
                 if (campo === 'origem' || campo === 'destino') {
-                    return false; // Desabilitar apenas os selects de empresas
+                    return true;
                 }
+                // Habilita os demais campos
+                return false;
             }
-            return true; // Habilitar os outros campos por padrão
-        },    
+
+            // Se 'this.operacao' não for definido, habilita todos os campos
+            if (!this.operacao) {
+                return true;
+            }
+        },
         async buscarOperacoesPendentes() {
             try {
                 const response = await axios.get('http://localhost:8000/api/operacoes/');
@@ -191,8 +206,10 @@ export default {
                         const data = response.data;
                         console.log("Dados da API:", response.data);
                         this.carregarDadosSaida(data);
-                        console.log("Origem selecionada: ", this.origemSelecionada);
-                        console.log("Destino selecionado: ", this.destinoSelecionado);
+
+                        return response;
+                    }else{
+                        return null;
                     }
 
                 } catch (error) {
@@ -202,18 +219,38 @@ export default {
                         console.log("Resposta completa:", error.response);
                     }
                     alert("Não foi possível buscar a operação. Verifique a conexão com o servidor.");
+                    return null;
                 }
             }
         },
         carregarDadosSaida(data) {
             this.id_op=data.id_operacao;
-            this.origemSelecionada = data.empresa_origem.nome;
-            this.destinoSelecionado = data.empresa_destino.nome;
+            this.motorista_saida=data.motorista_saida;
+
+            // Atribuindo os IDs primeiro
+            const origemId = data.empresa_origem;
+            const destinoId = data.empresa_destino;
+
+            // Chamando a função para buscar os nomes
+            this.carregarNomesEmpresas(origemId, destinoId);
+
             this.lacre1_saida = data.nro_lacre1_saida;
             this.lacre2_saida = data.nro_lacre2_saida;
             this.mdfe_saida = data.nro_mdfe_saida;
             console.log(data.nro_mdfe_saida)
             this.nota_fiscal_saida = data.nro_notafiscal_saida;
+        },
+        async carregarNomesEmpresas(origemId, destinoId) {
+            try {
+                // Fazendo requisições para obter os nomes das empresas
+                const origemResponse = await axios.get(`http://localhost:8000/api/empresas/${origemId}/`);
+                const destinoResponse = await axios.get(`http://localhost:8000/api/empresas/${destinoId}/`);
+
+                this.origemSelecionada=origemResponse.data.nome;
+                this.destinoSelecionado=destinoResponse.data.nome;
+            } catch (error) {
+                console.error("Erro ao buscar os nomes das empresas:", error);
+            }
         },
         async buscarDados() {
             try {
@@ -253,11 +290,14 @@ export default {
         async handleSubmit() {
             if (this.verificarCampos()) {
                 const dataOperacao = this.operacao === 'saída' ? this.dadosSaida() : this.dadosRecebimento();
+                console.log("Post do recebimento: ", dataOperacao);
 
                 try {
                     if (this.operacao === 'recebimento') {
                         // Chamando a função 'procurarPlaca' para verificar a operação pendente
+                        console.log('Placa enviada para procurarPlaca:', this.placa);
                         const responseBuscar = await this.procurarPlaca();
+                        console.log('Retorno de procurarPlaca:', responseBuscar);
 
                         if (responseBuscar && responseBuscar.status === 200) {
                             // Enviando os dados para atualizar a operação existente
@@ -288,6 +328,7 @@ export default {
                 veiculo: this.veiculo.id_veiculo,
                 placa: this.placa,
                 motorista_saida: this.motoristaSelecionado,
+                motorista_recebimento: "",
                 empresa_origem: this.origemSelecionada,
                 user_saida: this.user_saida,
                 dta_saida: this.data_saida,
@@ -311,35 +352,45 @@ export default {
                 nro_lacre1_entrada: this.lacre1,
                 nro_lacre2_entrada: this.lacre2,
                 dta_entrada: this.data_recebimento,
-                status: this.verificarConfronto() ? 'Confronto' : 'Concluído'
-            };
+                status: ''
 
-            if(this.verificarConfronto()){
+            };
+        
+            const confronto = this.verificarConfronto(dados);
+            dados.status = confronto ? 'Confronto' : 'Concluído';
+
+            if (confronto) {
+                console.log(confronto);
                 this.registrarConfronto(dados);
             }
 
+            console.log('Dados de recebimento: ', dados);
             return dados;
         },
-        verificarConfronto() {
+        verificarConfronto(dados) {
+            console.log('Comparando motorista:', this.motorista_saida, '!==', dados.motorista_recebimento, '->', this.motorista_saida !== dados.motorista_recebimento);
+            console.log('Comparando lacre 1:', this.lacre1_saida, '!==', dados.nro_lacre1_entrada, '->', this.lacre1_saida !== dados.nro_lacre1_entrada);
+            console.log('Comparando lacre 2:', this.lacre2_saida, '!==', dados.nro_lacre2_entrada, '->', this.lacre2_saida !== dados.nro_lacre2_entrada);
+            console.log('Comparando MDF-e:', this.mdfe_saida, '!==', dados.nro_mdfe_entrada, '->', this.mdfe_saida !== dados.nro_mdfe_entrada);
+            console.log('Comparando Nota Fiscal:', this.nota_fiscal_saida, '!==', dados.nro_notafiscal_entrada, '->', this.nota_fiscal_saida !== dados.nro_notafiscal_entrada);
+
             return (
-                this.motorista_saida !== this.motorista_recebimento ||
-                this.lacre1_saida !== this.lacre1_entrada ||
-                this.lacre2_saida !== this.lacre2_entrada ||
-                this.mdfe_saida !== this.mdfe_entrada ||
-                this.nota_fiscal_saida !== this.nota_fiscal_entrada
+                this.motorista_saida !== dados.motorista_recebimento ||
+                this.lacre1_saida !== dados.nro_lacre1_entrada ||
+                this.lacre2_saida !== dados.nro_lacre2_entrada ||
+                this.mdfe_saida !== dados.nro_mdfe_entrada ||
+                this.nota_fiscal_saida !== dados.nro_notafiscal_entrada
             );
         },
-        // Função para registrar o confronto
-        async registrarConfronto() {
+        async registrarConfronto(dados) {
             const dadosConfronto = {
-                operacao: this.id_op,  // ID da operação, certifique-se de passar o ID correto
-                dta_confronto: this.data_recebimento,
+                id_operacao: this.id_op, // Certifique-se de passar o ID correto
+                dta_confronto: dados.dta_entrada,
                 status: 'Inconsistente',
                 comentario: ''
             };
 
             try {
-                // Enviando os dados do confronto para a API
                 const response = await axios.post('http://localhost:8000/api/confrontos/', dadosConfronto);
                 if (response.status === 201) {
                     console.log("Confronto gerado!");
@@ -348,7 +399,7 @@ export default {
                 console.error("Erro ao registrar confronto:", error);
             }
         },
-        formatarPlaca(placa) {
+                formatarPlaca(placa) {
             return placa.toUpperCase();
         },
         resetPlaca() {
@@ -397,6 +448,10 @@ export default {
             if (!this.origemSelecionada) return alert('Selecione a empresa de origem!');
             if (!this.destinoSelecionado) return alert('Selecione a empresa de destino!');
             if (!this.placa) return alert('Digite a placa do veículo.');
+            if (!this.placa || !this.mdfe) {
+                alert("Os campos de placa e MDFE são obrigatórios.");
+                return false;
+            }
             return true;
         }
     }
