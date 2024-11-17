@@ -5,8 +5,8 @@
 
     <form id="login-form" @submit.prevent="handleSubmit">
       <input type="text" v-model="username" placeholder="Digite seu usuário..." @input="clearCustomError('text')" />
-      <input type="password" v-model="password" placeholder="Digite sua senha..." @input="clearCustomError('password')" />
-
+      <input type="password" v-model="password" placeholder="Digite sua senha..."
+        @input="clearCustomError('password')" />
       <button type="submit">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -20,7 +20,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { login } from '@/api/auth';
+import { login } from '@/api/auth'; // Supondo que o login é uma função que faz a chamada à API
 
 export default {
   name: 'Login',
@@ -31,11 +31,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['login']), // Mapeia a ação de login do Vuex
+    ...mapActions(['login']), // Mapeia a ação 'login' do Vuex
+
     clearCustomError(type) {
       const input = document.querySelector(`input[type="${type}"]`);
       input.setCustomValidity(''); // Limpa a mensagem de erro
     },
+
     async handleSubmit() {
       const usernameInput = document.querySelector('input[type="text"]');
       const passwordInput = document.querySelector('input[type="password"]');
@@ -58,25 +60,34 @@ export default {
         return;
       }
 
-      const isValidUser = this.username === 'Ricardo' && this.password === '123';
       const credentials = {
-        username: this.username,
-        password: this.password
+        email: this.username, // Enviar como email no back-end
+        password: this.password,
       };
 
-      //const data = await login(credentials);
-      //console.log(data);
+      try {
+        const { data } = await login(credentials); // Chamada à API
 
-      if (isValidUser) {
-        this.login(); // Chama a ação de login do Vuex
-        this.$router.push('/registros-pendentes'); // Redireciona para outra página
-      } else {
-        alert('Usuário ou senha incorretos');
+        // Verifique se os tokens estão disponíveis
+        if (data?.access && data?.refresh) {
+          this.login(data); // Atualiza o Vuex com os dados do login
+          localStorage.setItem('accessToken', data.access);
+          localStorage.setItem('refreshToken', data.refresh);
+          this.$router.push('/registros-pendentes');
+        } else {
+          throw new Error('Credenciais inválidas ou conta inativa.');
+        }
+      } catch (error) {
+        console.error(error.message || error);
+        alert(error.message || 'Erro ao tentar fazer login.');
       }
     },
   },
 };
+
 </script>
+
+
 
 <style lang="sass" scoped>
 @import '@/assets/sass/main.sass'
