@@ -350,14 +350,21 @@ export default {
                 nro_mdfe_entrada: this.mdfe,
                 nro_notafiscal_entrada: this.nota_fiscal,
                 nro_lacre1_entrada: this.lacre1,
-                nro_lacre2_entrada: this.lacre2,
                 dta_entrada: this.data_recebimento,
-                status: ''
+                status: '',
+                nro_lacre2_entrada: null
 
             };
+
+            if (this.lacre2 === '') {
+                this.lacre2 === null
+                dados.nro_Lacre2_entrada = this.lacre2;
+            }else{
+                dados.nro_lacre2_entrada=this.lacre2;
+            }
         
             const confronto = this.verificarConfronto(dados);
-            dados.status = confronto ? 'Confronto' : 'Concluído';
+            dados.status = !confronto ? 'Confronto' : 'Concluído';
 
             if (confronto) {
                 console.log(confronto);
