@@ -262,14 +262,17 @@ export default {
 
                 if (responseMotoristas.ok) {
                     this.motoristas = await responseMotoristas.json();
+                    this.motoristas = this.motoristas.filter(m => m.situacao === 'A');
                 }
 
                 if (responseEmpresas.ok) {
                     this.empresas = await responseEmpresas.json();
+                    this.empresas=this.empresas.filter(e => e.situacao === 'A');
                 }
 
                 if (responseVeiculos.ok) {
                     this.veiculo = await responseVeiculos.json();
+                    this.veiculo= this.veiculo.filter(v => v.situacao === 'A');
                 }
 
                 if (this.placa) {
@@ -280,6 +283,8 @@ export default {
                         this.id_veiculo = this.veiculo.id_veiculo;
                         this.tipo_veiculo = this.veiculo.tipo_veiculo;
                         this.modelo = this.veiculo.modelo;
+                    }else{
+                        alert('A placa digitada não existe!');
                     }
                 }
 
@@ -328,7 +333,6 @@ export default {
                 veiculo: this.veiculo.id_veiculo,
                 placa: this.placa,
                 motorista_saida: this.motoristaSelecionado,
-                motorista_recebimento: "",
                 empresa_origem: this.origemSelecionada,
                 user_saida: this.user_saida,
                 dta_saida: this.data_saida,
