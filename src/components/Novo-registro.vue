@@ -368,7 +368,7 @@ export default {
             }
         
             const confronto = this.verificarConfronto(dados);
-            dados.status = !confronto ? 'Confronto' : 'Concluído';
+            dados.status = !confronto ? 'Concluído' : 'Confronto';
 
             if (confronto) {
                 console.log(confronto);
