@@ -126,47 +126,48 @@ export default {
 
 <style lang="sass" scoped>
 @import '@/assets/sass/main.sass' // Usando o alias definido
-#main-content
-  ul
-    list-style-type: none
+ul
+  list-style-type: none
 
-  #card
-    margin-bottom: 60px
-  #card-info,
-  #card-valores
-    display: grid
-    grid-template-columns: repeat(7, 1fr) // Alinha 7 colunas com mesmo tamanho
-    padding: 1rem 0 // Espaçamento vertical
-    justify-items: center
-    gap: 1rem
+#card
+  margin-bottom: 60px
+#card-info,
+#card-valores
+  display: grid
+  grid-template-columns: repeat(7, 1fr) // Alinha 7 colunas com mesmo tamanho
+  padding: 1rem 0 // Espaçamento vertical
+  justify-items: center
+  gap: 1rem
 
-    text-align: center
-                
-    h2
-      @include titulo-styles
+  text-align: center
+              
+  h2
+    @include titulo-styles
 
-  #card-valores
-    border-top: 1px solid #000
+#card-valores
+  border-top: 1px solid #000
 
-    margin-top: 0.75rem
+  margin-top: 0.75rem
 
-    h2
-      @include card-itens-styles
+  h2
+    @include card-itens-styles
 
-  .card-info-itens
-    display: contents // Para que o grid funcione corretamente
+.card-info-itens
+  display: contents // Para que o grid funcione corretamente
 
-  #visualizar
-    cursor: pointer
+#visualizar
+  cursor: pointer
 
-    width: 100px
-    height: 24px
+  width: 100px
+  height: 24px
 
-    background-color: $verde1
-    color: $branco
+  background-color: $verde1
+  color: $branco
 
-    border: 0
-    border-radius: 0.313rem
+  border: 0
+  border-radius: 0.313rem
+
+
 
 // Media queries para responsividade
 @media screen and (max-width: 1024px)

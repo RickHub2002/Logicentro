@@ -103,8 +103,8 @@
 
       <button id="cadastrar" type="button" @click="handleSubmit">Cadastrar</button>
     </div>
-
-    <div v-if="tipoSelecionado">
+    
+    <div id="historico" v-if="tipoSelecionado">
       <h3 id="titulo-selecionado">Histórico</h3>
       <div v-if="tipoSelecionado === 'veiculo'" v-for="veiculo in veiculos" :key="veiculo.id">
         <ul id="card-info">
@@ -505,7 +505,7 @@ export default {
           
   align-self: flex-end
 
-  background: $branco2
+  background: $branco
 
   width: 110px
   text-align: center
@@ -520,6 +520,7 @@ export default {
   &:hover
     background: $azul3
     color: $branco2
+
 
 #historico-dados, #topicos
   list-style-type: none

@@ -4,17 +4,35 @@
     <div id="line"></div>
 
     <form id="login-form" @submit.prevent="handleSubmit">
-      <input type="text" v-model="username" placeholder="Digite seu usuário..." @input="clearCustomError('text')" />
-      <input type="password" v-model="password" placeholder="Digite sua senha..."
-        @input="clearCustomError('password')" />
-      <button type="submit">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M4.05267 15.0001C4.05291 14.735 4.15842 14.4808 4.34601 14.2934L9.46067 9.17876C9.61548 9.02399 9.73829 8.84024 9.82208 8.638C9.90586 8.43576 9.94898 8.219 9.94898 8.00009C9.94898 7.78119 9.90586 7.56442 9.82208 7.36219C9.73829 7.15995 9.61548 6.9762 9.46067 6.82143L4.35267 1.71009C4.17052 1.52149 4.06972 1.26889 4.072 1.00669C4.07428 0.744495 4.17945 0.493682 4.36485 0.308274C4.55026 0.122866 4.80108 0.0176971 5.06327 0.0154187C5.32547 0.0131402 5.57807 0.113935 5.76667 0.296093L10.8747 5.40343C11.5615 6.0916 11.9472 7.02416 11.9472 7.99643C11.9472 8.9687 11.5615 9.90125 10.8747 10.5894L5.76001 15.7041C5.62035 15.8438 5.44244 15.9391 5.2487 15.9778C5.05497 16.0165 4.85411 15.997 4.67147 15.9217C4.48882 15.8464 4.33257 15.7187 4.22245 15.5546C4.11232 15.3906 4.05324 15.1977 4.05267 15.0001V15.0001Z"
-            fill="currentColor" />
-        </svg>
-      </button>
-    </form>
+    <!-- Primeiro input -->
+    <div class="input-group">
+      <input
+        id="username"
+        type="text"
+        v-model="username"
+        required
+        placeholder=" "
+      />
+      <label for="username">Digite seu usuário</label>
+    </div>
+
+    <!-- Segundo input -->
+    <div class="input-group">
+      <input
+        id="password"
+        type="password"
+        v-model="password"
+        required
+        placeholder=" "
+      />
+      <label for="password">Digite sua senha</label>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      <span>Entrar</span>
+    </button>
+
+  </form>
   </section>
 </template>
 
@@ -113,37 +131,62 @@ export default {
     margin-top: 110px
     @include centralizar()
     flex-direction: column
-    gap: 78px
+    gap: 1.875rem
     width: 80%
 
-    input[type="text"], input[type="password"]
-      font-family: 'Inter', sans-serif
-      width: 60%
-      height: 3.75rem
-      border: 0
-      border-radius: 30px
-      padding-left: 22px
-      transition: outline, box-shadow 0.1s ease-out
+    .input-group
+      position: relative
+      margin-bottom: 1.5rem
 
-      &::placeholder
-        @include placeholder-styles
+      input
+        width: 100%
+        padding: 1rem
+        border: 1.5px solid #ccc
+        border-radius: 8px
+        background: transparent
+        font-size: 1rem
+        color: #fff
+        outline: none
+        transition: border-color 0.3s ease
 
-      &:focus
-        box-shadow: 0 0 0 4px $branco
-    button
-      width: 140px
-      height: 24px
-      border: 0
-      border-radius: 5px
-      cursor: pointer
-      background-color: $branco
-      transition: 0.1s ease-out
+        &:focus
+          border-color: #1a73e8
 
-      &:hover
-        width: calc(140px + 10px)
+        &:focus ~ label,
+        &:not(:placeholder-shown) ~ label
+          transform: translateY(-3rem) scale(0.9)
+          color: #1a73e8
+          padding: 0 0.2rem
 
-      svg
-        color: $preto
+      label
+        position: absolute
+        top: 50%
+        left: 1rem
+        transform: translateY(-50%)
+        background: transparent
+        padding: 0 0.1rem
+        color: #aaa
+        font-size: 1rem
+        pointer-events: none
+        transition: all 0.3s ease
+
+  button
+    padding: 0.8rem 1.5rem
+    font-size: 1rem
+    font-weight: bold
+    border: 2px solid $branco
+    border-radius: 8px
+    background: transparent
+    color: $branco
+    cursor: pointer
+    transition: all 0.3s ease
+
+    &:hover
+      background: $branco
+      color: $azul3
+      transform: scale(1.05)
+
+
 
 @media screen and (max-width: 768px)
   #login-container

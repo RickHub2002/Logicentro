@@ -175,6 +175,8 @@ export default {
   left: 0
   top: 0
 
+  z-index: 555
+
   overflow-x: hidden
 
   padding: 1.375rem 0 0 1.375rem
