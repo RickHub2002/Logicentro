@@ -25,66 +25,69 @@
       </Card>
     </div>
     <!-- Exibição do Card Condicional -->
-    <div id="confronto-selecionado">
-      <Card id="card-container" v-if="confrontoSelecionado">
-        <section>
-          <form id="form-container">
-            <h2 class="titulo">Registro de saída</h2>
-            <div class="input-group">
-              <label for="placa-saida">Placa do veículo:</label>
-              <input type="text" id="placa-saida" :value="confrontoSelecionado.operacao.placa" readonly />
+    <div @click="fecharConfronto" id="modal-overlay" v-if="confrontoSelecionado">
+      <div id="modal-content" @click.stop>
+        <Card id="card-container">
+          <section>
+            <form id="form-container">
+              <h2 class="titulo">Registro de saída</h2>
+              <div class="input-group">
+                <label for="placa-saida">Placa do veículo:</label>
+                <input type="text" id="placa-saida" :value="confrontoSelecionado.operacao.placa" readonly />
+              </div>
+              <div class="input-group">
+                <label for="lacre1-saida">Número do 1º lacre:</label>
+                <input type="text" id="lacre1-saida" :value="confrontoSelecionado.operacao.nro_lacre1_saida" readonly />
+              </div>
+              <div class="input-group">
+                <label for="lacre2-saida">Número do 2º lacre (opcional):</label>
+                <input type="text" id="lacre2-saida" :value="confrontoSelecionado.operacao.nro_lacre2_saida" readonly />
+              </div>
+              <div class="input-group">
+                <label for="motorista-saida">Nome do motorista:</label>
+                <input type="text" id="motorista-saida" :value="getMotoristaNome(confrontoSelecionado.operacao.motorista_saida)" readonly />
+              </div>
+              <div class="input-group">
+                <label for="data-saida">Data da saída:</label>
+                <input type="date" id="data-saida" :value="confrontoSelecionado.operacao.dta_saida" readonly />
+              </div>
+            </form>
+          </section>
+          <section>
+            <form id="form-container">
+              <h2 class="titulo">Registro de recebimento</h2>
+              <div class="input-group">
+                <label for="placa-recebimento">Placa do veículo:</label>
+                <input type="text" id="placa-recebimento" :value="confrontoSelecionado.operacao.placa" readonly />
+              </div>
+              <div class="input-group">
+                <label for="lacre1-recebimento">Número do 1º lacre:</label>
+                <input type="text" id="lacre1-recebimento" :value="confrontoSelecionado.operacao.nro_lacre1_entrada" readonly />
+              </div>
+              <div class="input-group">
+                <label for="lacre2-recebimento">Número do 2º lacre (opcional):</label>
+                <input type="text" id="lacre2-recebimento" :value="confrontoSelecionado.operacao.nro_lacre2_entrada" readonly />
+              </div>
+              <div class="input-group">
+                <label for="motorista-recebimento">Nome do motorista:</label>
+                <input type="text" id="motorista-recebimento" :value="getMotoristaNome(confrontoSelecionado.operacao.motorista_recebimento)" readonly />
+              </div>
+              <div class="input-group">
+                <label for="data-recebimento">Data de recebimento:</label>
+                <input type="date" id="data-recebimento" :value="confrontoSelecionado.operacao.dta_entrada" readonly />
+              </div>
+            </form>
+          </section>
+          <section class="comentario-card">
+            <h2 id="comentario-titulo">Comentários:</h2>
+            <div id="input-comentario" class="input-group">
+              <textarea id="comentario" rows="4" placeholder="Insira suas observações.."></textarea>
+              <button id="concluir" type="submit">Concluir confronto</button>
+              <button id="fechar-modal" @click="fecharConfronto">Fechar janela</button>
             </div>
-            <div class="input-group">
-              <label for="lacre1-saida">Número do 1º lacre:</label>
-              <input type="text" id="lacre1-saida" :value="confrontoSelecionado.operacao.nro_lacre1_saida" readonly />
-            </div>
-            <div class="input-group">
-              <label for="lacre2-saida">Número do 2º lacre (opcional):</label>
-              <input type="text" id="lacre2-saida" :value="confrontoSelecionado.operacao.nro_lacre2_saida" readonly />
-            </div>
-            <div class="input-group">
-              <label for="motorista-saida">Nome do motorista:</label>
-              <input type="text" id="motorista-saida" :value="getMotoristaNome(confrontoSelecionado.operacao.motorista_saida)" readonly />
-            </div>
-            <div class="input-group">
-              <label for="data-saida">Data da saída:</label>
-              <input type="date" id="data-saida" :value="confrontoSelecionado.operacao.dta_saida" readonly />
-            </div>
-          </form>
-        </section>
-        <section>
-          <form id="form-container">
-            <h2 class="titulo">Registro de recebimento</h2>
-            <div class="input-group">
-              <label for="placa-recebimento">Placa do veículo:</label>
-              <input type="text" id="placa-recebimento" :value="confrontoSelecionado.operacao.placa" readonly />
-            </div>
-            <div class="input-group">
-              <label for="lacre1-recebimento">Número do 1º lacre:</label>
-              <input type="text" id="lacre1-recebimento" :value="confrontoSelecionado.operacao.nro_lacre1_entrada" readonly />
-            </div>
-            <div class="input-group">
-              <label for="lacre2-recebimento">Número do 2º lacre (opcional):</label>
-              <input type="text" id="lacre2-recebimento" :value="confrontoSelecionado.operacao.nro_lacre2_entrada" readonly />
-            </div>
-            <div class="input-group">
-              <label for="motorista-recebimento">Nome do motorista:</label>
-              <input type="text" id="motorista-recebimento" :value="getMotoristaNome(confrontoSelecionado.operacao.motorista_recebimento)" readonly />
-            </div>
-            <div class="input-group">
-              <label for="data-recebimento">Data de recebimento:</label>
-              <input type="date" id="data-recebimento" :value="confrontoSelecionado.operacao.dta_entrada" readonly />
-            </div>
-          </form>
-        </section>
-        <section class="comentario-card">
-          <h2 id="comentario-titulo">Comentários:</h2>
-          <div id="input-comentario" class="input-group">
-            <textarea id="comentario" rows="4" placeholder="Insira suas observações.."></textarea>
-            <button id="concluir" type="submit">Concluir confronto</button>
-          </div>
-        </section>
-      </Card>
+          </section>
+        </Card>
+      </div>
     </div>
   </Layout>
 </template>
@@ -177,7 +180,9 @@ export default {
         (confronto) => confronto.id_confronto === id
       );
     },
-
+    fecharConfronto() {
+      this.confrontoSelecionado = null;
+    },
     async salvarConfronto() {
       if (!this.confrontoSelecionado) return;
 
@@ -252,6 +257,19 @@ export default {
     border-radius: 0.313rem
 
 #confronto-selecionado
+  position: fixed
+  padding: 2rem
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%) // Centraliza o modal no eixo X e Y
+  width: 45vw
+  max-height: 80vh // Impede que o modal ultrapasse a altura visível
+  overflow-y: auto // Permite rolagem se o conteúdo exceder o tamanho
+  width: 45vw
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000
   background: $branco2
   padding: 30px
   border-radius: 0.625rem
@@ -325,6 +343,41 @@ export default {
 
     border: 0
     border-radius: 0.313rem
+
+#modal-overlay
+  position: fixed
+  top: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  background-color: rgba(0, 0, 0, 0.5)
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000
+
+#modal-content
+  background-color: $branco
+  padding: 20px
+  border-radius: 10px
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3)
+  position: relative
+  width: 80%
+  max-height: 90%
+  overflow-y: auto
+
+#fechar-modal
+  width: 134px
+  height: 24px
+  border: 0
+  border-radius: 0.313rem
+  box-shadow: 1px 1px 1px 
+  font-family: 'Roboto', sans-serif
+  background: $branco2
+  font-size: 0.875rem
+  font-weight: 400
+  cursor: pointer
+  color: $preto
 
   // Media queries para responsividade
   @media screen and (max-width: 1024px)
