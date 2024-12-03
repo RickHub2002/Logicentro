@@ -137,10 +137,9 @@ export default {
     };
   },
   created() {
-    // Verifica se há um estado salvo no sessionStorage
     const savedState = sessionStorage.getItem('sidebarState');
     if (savedState !== null) {
-      this.isOpen = JSON.parse(savedState); // Converte a string em booleano
+      this.isOpen = JSON.parse(savedState);
     }
   },
   methods: {
@@ -149,11 +148,20 @@ export default {
       sessionStorage.setItem('sidebarState', JSON.stringify(this.isOpen));
     },
     logout() {
+      console.log('Logout acionado');
+
+      // Limpa os dados de autenticação
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      this.$store.dispatch('logout'); // Atualiza o Vuex
+
+      // Redireciona para a página de login
       this.$router.push('/');
     },
-  }
+  },
 };
 </script>
+
 
 <style lang="sass" scoped>
 @import '@/assets/sass/main.sass' // Usando o alias definido

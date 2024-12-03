@@ -38,7 +38,7 @@
 
 <script>
 import { mapActions } from 'vuex';
-import { login } from '@/api/auth'; // Supondo que o login é uma função que faz a chamada à API
+import { login } from '@/api/auth';
 
 export default {
   name: 'Login',
@@ -49,18 +49,17 @@ export default {
     };
   },
   methods: {
-    ...mapActions(['login']), // Mapeia a ação 'login' do Vuex
+    ...mapActions(['login']), 
 
     clearCustomError(type) {
       const input = document.querySelector(`input[type="${type}"]`);
-      input.setCustomValidity(''); // Limpa a mensagem de erro
+      input.setCustomValidity('');
     },
 
     async handleSubmit() {
       const usernameInput = document.querySelector('input[type="text"]');
       const passwordInput = document.querySelector('input[type="password"]');
 
-      // Verifica se os campos estão vazios e define a mensagem de erro personalizada
       if (!this.username || !this.password) {
         if (!this.username) {
           usernameInput.setCustomValidity('Por favor, digite seu usuário.');
@@ -74,21 +73,19 @@ export default {
           passwordInput.setCustomValidity('');
         }
 
-        // Impede o envio se houver campos não preenchidos
         return;
       }
 
       const credentials = {
-        email: this.username, // Enviar como email no back-end
+        email: this.username,
         password: this.password,
       };
 
       try {
-        const { data } = await login(credentials); // Chamada à API
+        const { data } = await login(credentials);
 
-        // Verifique se os tokens estão disponíveis
         if (data?.access && data?.refresh) {
-          this.login(data); // Atualiza o Vuex com os dados do login
+          this.login(data);
           localStorage.setItem('accessToken', data.access);
           localStorage.setItem('refreshToken', data.refresh);
           this.$router.push('/registros-pendentes');
@@ -101,10 +98,14 @@ export default {
       }
     },
   },
+  created() {
+    // Verifica se o usuário já está autenticado ao carregar a página
+    if (localStorage.getItem('accessToken')) {
+      this.$router.push('/registros-pendentes');
+    }
+  },
 };
-
 </script>
-
 
 
 <style lang="sass" scoped>

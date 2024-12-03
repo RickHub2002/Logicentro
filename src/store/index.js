@@ -2,7 +2,7 @@ import { createStore } from 'vuex';
 
 const store = createStore({
   state: {
-    isLoggedIn: false,
+    isLoggedIn: localStorage.getItem('accessToken') ? true : false, // Verifica se já existe um token no localStorage
   },
   mutations: {
     login(state) {
